@@ -1,0 +1,12 @@
+server:
+  port: 8094
+spring:
+  application:
+    name: snowball-admin
+#multi-table-query:
+#  enabeld: true
+common:
+  application: admin # EnumApplication
+  platform: snowball
+  data:
+    enabled: true

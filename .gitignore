@@ -1,0 +1,4 @@
+.idea/
+**/target/
+*.iml
+/snowball-common/src/main/resources/application-test.yml

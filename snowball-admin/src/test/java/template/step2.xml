@@ -1,0 +1,7 @@
+<template>  [
+    <!--  检出代码-->    {  "type":"git_clone_pull",  "params":{  "repository":"https://github.com/lzb-snowball/platform"  }  },    {  "type":"git_clone_pull",  "params":{  "repository":"https://github.com/lzb-snowball/platform"  }  },    {  "type":"git_clone_pull",  "params":{  "repository":"https://github.com/lzb-snowball/platform"  }  },
+    <!--  编译-->  {  "type":"maven_install",  "params":{  "path":"@/parent"  }  },
+    <!--  拷贝libs到远程服务器-->
+    <!--  拷贝jar到远程服务器-->      {  "type":"cmd",  "params":{  "cmd":"sshpass -p \"aaaaaaaaa\" scp -o StrictHostKeyChecking=no -q @/platform/snowball-user/target/snowball-user.jar root@192.168.1.1:/project/snowball/snowball-user.jar "  }  },
+    <!--  重启应用-->      {  "type":"cmd",  "params":{  "cmd":"cd /project/snowball && ps aux | grep 'snowball-user.jar' | awk '{print   {  "type":"cmd",  "params":{  "cmd":"cd /project/snowball && ps aux | grep 'snowball-user.jar' | awk '{print module}' | xargs kill -9 || true && java -Xms1024m -Xmx1024m -Dloader.path=/project/snowball/lib -jar -Dspring.profiles.active=prod,platform /project/snowball/snowball-user.jar "  }  },  }' | xargs kill -9 || true && java -Xms1024m -Xmx1024m -Dloader.path=/project/snowball/lib -jar -Dspring.profiles.active=prod,platform /project/snowball/snowball-user.jar "  }  },      {}  ]
+</template>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.pro</groupId>
+        <artifactId>platform</artifactId>
+        <version>2.0.0</version>
+    </parent>
+
+    <artifactId>snowball-admin</artifactId>
+    <packaging>jar</packaging>
+    <description>管理中心</description>
+
+    <properties>
+        <start-class>com.pro.snowball.admin.AdminApplication</start-class>
+        <include-artifactId-api>snowball-api</include-artifactId-api>
+        <include-artifactId-common>snowball-common</include-artifactId-common>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>example-admin</artifactId>
+            <version>${common-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>snowball-common</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>snowball-admin</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <!-- 需要排除的jar的 groupId -->
+                            <excludeArtifactIds>
+                                snowball-api,snowball-common,framework-api,framework-cache,framework-enums,framework-generator,framework-java-to-db,framework-java-to-db-annotations,framework-jdbc,framework-message,framework-multi-table-query,framework-multi-table-query-annotations,framework-mybatis-plus,common-module-api,common-module-service,common-web-security,common-web-controller-user,common-web-controller-admin,common-web-controller-agent,common-module-api-dependencies,common-module-service-dependencies,common-module-api-admin,common-module-api-agent,common-module-api-common,common-module-api-message,common-module-api-pay,common-module-api-system,common-module-api-user,common-module-api-userlevel,common-module-api-usermoney,common-module-service-admin,common-module-service-agent,common-module-service-auth,common-module-service-common,common-module-service-login,common-module-service-message,common-module-service-pay,common-module-service-paythird,common-module-service-system,common-module-service-user,common-module-service-userlevel,common-module-service-usermoney,example-admin,example-agent,example-pay,example-user,example-common
+                            </excludeArtifactIds>
+                            <includeScope>runtime</includeScope>
+<!--                            <includeScope>compile</includeScope>-->
+<!--                            <excludeScope>compile</excludeScope>-->
+<!--                            <excludeScope>test</excludeScope>-->
+<!--                            <excludeScope>provided</excludeScope>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

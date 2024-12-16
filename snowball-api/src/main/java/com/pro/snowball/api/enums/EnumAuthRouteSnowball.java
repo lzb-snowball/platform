@@ -39,7 +39,7 @@ public enum EnumAuthRouteSnowball implements IEnumToDbEnum<AuthRoute> {
     private final String name;
     private final String componentPath;
     private final String icon;
-    private String permissionPaths;
+    private final String permissionPaths;
     private final String pic;
     private final String url;
     private final String remark;

@@ -17,8 +17,5 @@
 		<module>snowball-api</module>
 		<module>snowball-common</module>
 		<module>snowball-admin</module>
-		<module>snowball-agent</module>
-		<module>snowball-user</module>
-		<module>snowball-pay</module>
 	</modules>
 </project>

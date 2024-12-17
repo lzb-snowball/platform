@@ -22,8 +22,35 @@
     <dependencies>
         <dependency>
             <groupId>com.pro</groupId>
-            <artifactId>example-admin</artifactId>
-            <version>${common-common.version}</version>
+            <artifactId>common-web-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-web-controller-admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-module-service-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-module-service-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-module-service-login</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-module-service-message</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>framework-java-to-db</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-module-service-admin</artifactId>
         </dependency>
         <dependency>
             <groupId>com.pro</groupId>
@@ -53,8 +80,7 @@
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                             <!-- 需要排除的jar的 groupId -->
                             <excludeArtifactIds>
-                                snowball-api,snowball-common,framework-api,framework-cache,framework-enums,framework-generator,framework-java-to-db,framework-java-to-db-annotations,framework-jdbc,framework-message,framework-multi-table-query,framework-multi-table-query-annotations,framework-mybatis-plus,common-module-api,common-module-service,common-web-security,common-web-controller-user,common-web-controller-admin,common-web-controller-agent,common-module-api-dependencies,common-module-service-dependencies,common-module-api-admin,common-module-api-agent,common-module-api-common,common-module-api-message,common-module-api-pay,common-module-api-system,common-module-api-user,common-module-api-userlevel,common-module-api-usermoney,common-module-service-admin,common-module-service-agent,common-module-service-auth,common-module-service-common,common-module-service-login,common-module-service-message,common-module-service-pay,common-module-service-paythird,common-module-service-system,common-module-service-user,common-module-service-userlevel,common-module-service-usermoney,example-admin,example-agent,example-pay,example-user,example-common
-                            </excludeArtifactIds>
+                                snowball-api,snowball-common,framework-api,framework-cache,framework-enums,framework-generator,framework-java-to-db,framework-java-to-db-annotations,framework-jdbc,framework-message,framework-multi-table-query,framework-multi-table-query-annotations,framework-mybatis-plus,common-module-api,common-module-service,common-web-security,common-web-controller-admin,common-module-api-dependencies,common-module-service-dependencies,common-module-api-admin,common-module-api-common,common-module-api-message,common-module-api-system,common-module-service-admin,common-module-service-auth,common-module-service-common,common-module-service-login,common-module-service-message,common-module-service-system,example-admin,example-common                            </excludeArtifactIds>
                             <includeScope>runtime</includeScope>
 <!--                            <includeScope>compile</includeScope>-->
 <!--                            <excludeScope>compile</excludeScope>-->

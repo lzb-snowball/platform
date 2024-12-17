@@ -16,9 +16,9 @@
 
     <dependencies>
         <dependency>
-                 <groupId>com.pro</groupId>
-                 <artifactId>example-common</artifactId>
-             </dependency>
+            <groupId>com.pro</groupId>
+            <artifactId>common-module-service-dependencies</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.pro</groupId>
             <artifactId>snowball-api</artifactId>

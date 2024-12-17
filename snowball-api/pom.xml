@@ -22,21 +22,6 @@
         </dependency>
         <dependency>
             <groupId>com.pro</groupId>
-            <artifactId>common-module-api-user</artifactId>
-            <version>${common-common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.pro</groupId>
-            <artifactId>common-module-api-usermoney</artifactId>
-            <version>${common-common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.pro</groupId>
-            <artifactId>common-module-api-userlevel</artifactId>
-            <version>${common-common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.pro</groupId>
             <artifactId>common-module-api-common</artifactId>
         </dependency>
         <dependency>

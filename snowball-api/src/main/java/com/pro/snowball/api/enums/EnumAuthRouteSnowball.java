@@ -3,13 +3,13 @@ package com.pro.snowball.api.enums;
 import com.pro.common.modules.api.dependencies.CommonConst;
 import com.pro.common.modules.api.dependencies.enums.EnumSysRole;
 import com.pro.common.module.api.common.model.db.AuthRoute;
-import com.pro.common.module.api.common.model.enums.EnumAuthRouteType;
+import com.pro.common.modules.api.dependencies.enums.EnumAuthRouteType;
 import com.pro.framework.api.enums.IEnumToDbEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.pro.common.module.api.common.model.enums.EnumAuthRouteType.*;
-import static com.pro.common.module.api.common.model.enums.EnumAuthRouteType.BUTTON;
+import static com.pro.common.modules.api.dependencies.enums.EnumAuthRouteType.*;
+import static com.pro.common.modules.api.dependencies.enums.EnumAuthRouteType.BUTTON;
 import static com.pro.common.modules.api.dependencies.enums.EnumSysRole.ADMIN;
 import static com.pro.common.modules.api.dependencies.enums.EnumSysRole.AGENT;
 

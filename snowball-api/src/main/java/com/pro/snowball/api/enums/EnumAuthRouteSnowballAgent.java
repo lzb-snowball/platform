@@ -1,14 +1,14 @@
 package com.pro.snowball.api.enums;
 
 import com.pro.common.module.api.common.model.db.AuthRoute;
-import com.pro.common.module.api.common.model.enums.EnumAuthRouteType;
+import com.pro.common.modules.api.dependencies.enums.EnumAuthRouteType;
 import com.pro.common.modules.api.dependencies.CommonConst;
 import com.pro.common.modules.api.dependencies.enums.EnumSysRole;
 import com.pro.framework.api.enums.IEnumToDbEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.pro.common.module.api.common.model.enums.EnumAuthRouteType.*;
+import static com.pro.common.modules.api.dependencies.enums.EnumAuthRouteType.*;
 import static com.pro.common.modules.api.dependencies.enums.EnumSysRole.AGENT;
 
 /**
@@ -36,7 +36,7 @@ public enum EnumAuthRouteSnowballAgent implements IEnumToDbEnum<AuthRoute> {
     private final String name;
     private final String componentPath;
     private final String icon;
-    private String permissionPaths;
+    private final String permissionPaths;
     private final String pic;
     private final String url;
     private final String remark;

@@ -21,12 +21,6 @@ import static com.pro.common.modules.api.dependencies.enums.EnumSysRole.AGENT;
 public enum EnumAuthRouteSnowball implements IEnumToDbEnum<AuthRoute> {
     catalog_snowball(ADMIN, null, CATALOG, "项目管理", null, "el-icon-trophy-1", null, null, null, null, null, 100100, null),
 
-    userSnowballAmount(ADMIN, catalog_snowball, MENU, "用户项目卡包数量", "/snowball/userSnowballAmount", null, null, null, null, null, null, 100500, null),
-    userSnowballAmount_QUERY(ADMIN, userSnowballAmount, BUTTON, "查询", null, null, "userSnowballAmount", null, null, null, null, 100500, null),
-    userSnowballAmount_ALL(ADMIN, userSnowballAmount, BUTTON, "管理", null, null, "#ALL#userSnowballAmount", null, null, null, null, 100501, null),
-    userSnowballAmountRecord(ADMIN, catalog_snowball, MENU, "用户项目卡包数量变动", "/snowball/userSnowballAmountRecord", null, null, null, null, null, null, 100600, null),
-    userSnowballAmountRecord_QUERY(ADMIN, userSnowballAmountRecord, BUTTON, "查询", null, null, "userSnowballAmountRecord", null, null, null, null, 100600, null),
-    userSnowballAmountRecord_ALL(ADMIN, userSnowballAmountRecord, BUTTON, "管理", null, null, "#ALL#userSnowballAmountRecord", null, null, null, null, 100601, null),
     snowballProduct(ADMIN, catalog_snowball, MENU, "项目产品配置", "/snowball/snowballProduct", null, null, null, null, null, null, 100200, null),
     snowballProduct_QUERY(ADMIN, snowballProduct, BUTTON, "查询", null, null, "snowballProduct,snowballProductRate", null, null, null, null, 100200, null),
     snowballProduct_ALL(ADMIN, snowballProduct, BUTTON, "管理", null, null, "#ALL#snowballProduct,#ALL#snowballProductRate", null, null, null, null, 100201, null),

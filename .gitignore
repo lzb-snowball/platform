@@ -2,3 +2,4 @@
 **/target/
 *.iml
 /snowball-common/src/main/resources/application-test.yml
+/snowball-admin/src/main/resources/system-dev.yml

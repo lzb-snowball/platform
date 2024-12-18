@@ -1,14 +1,17 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.javatodb.annotation.JTDField;
+import com.pro.framework.javatodb.annotation.JTDTable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 @ApiModel(description = "我的执行模板")
-public class MyExecuteTemplate extends BaseModel {
+@JTDTable(entityId = 10003, module = "snowball")
+public class MyExecuteTemplate extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "名称")
     @JTDField(entityClass = MyExecuteGroup.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long groupId;

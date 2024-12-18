@@ -1,15 +1,18 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.javatodb.annotation.JTDField;
+import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.framework.javatodb.constant.JTDConst;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "执行订单步骤")
-public class ExecuteOrderStepCommand extends BaseModel {
+@ApiModel(description = "执行订单步骤命令行")
+@JTDTable(entityId = 10010, module = "snowball")
+public class ExecuteOrderStepCommand extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "序号")
     private Integer no;
     @ApiModelProperty(value = "对应订单id")
@@ -29,4 +32,13 @@ public class ExecuteOrderStepCommand extends BaseModel {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @Override
+    public Boolean getEnabled() {
+        return true;
+    }
+
+    @Override
+    public Integer getSort() {
+        return 0;
+    }
 }

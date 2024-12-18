@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * ${label}服务
+ */
 @Service
 @Slf4j
 public class DemoService extends BaseService<DemoDao, Demo> {

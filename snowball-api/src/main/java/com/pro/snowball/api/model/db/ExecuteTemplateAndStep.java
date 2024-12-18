@@ -1,8 +1,10 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.api.model.IdModel;
 import com.pro.framework.javatodb.annotation.JTDField;
+import com.pro.framework.javatodb.annotation.JTDTable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +13,8 @@ import java.time.LocalDateTime;
 
 @Data
 @ApiModel(description = "执行模板和步骤的关联")
-public class ExecuteTemplateAndStep extends IdModel {
+@JTDTable(entityId = 10005, module = "snowball")
+public class ExecuteTemplateAndStep extends IdModel implements IConfigClass {
     @ApiModelProperty(value = "模板")
     @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long templateId;
@@ -24,4 +27,14 @@ public class ExecuteTemplateAndStep extends IdModel {
     private Integer step;
     @ApiModelProperty(value = "创建时间")
     protected LocalDateTime createTime;
+
+    @Override
+    public Boolean getEnabled() {
+        return true;
+    }
+
+    @Override
+    public Integer getSort() {
+        return 0;
+    }
 }

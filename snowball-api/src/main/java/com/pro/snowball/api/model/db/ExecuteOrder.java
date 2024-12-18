@@ -1,7 +1,9 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.javatodb.annotation.JTDField;
+import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.framework.javatodb.constant.JTDConst;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +11,8 @@ import lombok.Data;
 
 @Data
 @ApiModel(description = "执行订单")
-public class ExecuteOrder extends BaseModel {
+@JTDTable(entityId = 10012, module = "snowball")
+public class ExecuteOrder extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "对应我的模板Id")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id") // 数据量太大了,暂时不做显性关联
     private Long myTemplateId;
@@ -28,4 +31,14 @@ public class ExecuteOrder extends BaseModel {
 
     @ApiModelProperty(value = "当前第几步")
     transient private Integer stepNoCurrent;
+
+    @Override
+    public Boolean getEnabled() {
+        return true;
+    }
+
+    @Override
+    public Integer getSort() {
+        return 0;
+    }
 }

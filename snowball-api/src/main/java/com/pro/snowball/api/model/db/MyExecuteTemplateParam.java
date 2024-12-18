@@ -1,7 +1,9 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.javatodb.annotation.JTDField;
+import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.snowball.api.enums.EnumExecuteStepParamInputType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +11,8 @@ import lombok.Data;
 
 @Data
 @ApiModel(description = "我的执行模板的参数")
-public class MyExecuteTemplateParam extends BaseModel {
+@JTDTable(entityId = 10002, module = "snowball")
+public class MyExecuteTemplateParam extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "我的模板Id")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long myTemplateId;
@@ -26,7 +29,7 @@ public class MyExecuteTemplateParam extends BaseModel {
     @ApiModelProperty(value = "默认值")
     private String defaultValue;
     @ApiModelProperty(value = "输入类型")
-    @JTDField(defaultValue = "如果 ExecuteStepParamRequired 中定义了type=SERVER则只能选择服务器了")
+    @JTDField(description = "如果 ExecuteStepParamRequired 中定义了type=SERVER则只能选择服务器了")
     private EnumExecuteStepParamInputType inputType;
 
     @ApiModelProperty(value = "自定义选项值")

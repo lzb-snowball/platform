@@ -1,6 +1,7 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.javatodb.annotation.JTDField;
 import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.snowball.api.enums.EnumExecuteStepParamInputType;
@@ -11,8 +12,8 @@ import lombok.Data;
 
 @Data
 @ApiModel(description = "执行步骤需要的参数")
-@JTDTable(description = "")
-public class ExecuteStepParamRequired extends BaseModel {
+@JTDTable(entityId = 10007, module = "snowball")
+public class ExecuteStepParamRequired extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "参数编号")
     private String code;
     @ApiModelProperty(value = "参数名称")

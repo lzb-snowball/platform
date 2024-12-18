@@ -1,6 +1,7 @@
 package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
 import com.pro.framework.javatodb.annotation.JTDField;
 import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.framework.javatodb.constant.JTDConst;
@@ -10,7 +11,8 @@ import lombok.Data;
 
 @Data
 @ApiModel(description = "执行步骤命令行")
-public class ExecuteStepCommand extends BaseModel {
+@JTDTable(entityId = 10008, module = "snowball")
+public class ExecuteStepCommand extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "名称")
     private String name;
     @ApiModelProperty(value = "内容")

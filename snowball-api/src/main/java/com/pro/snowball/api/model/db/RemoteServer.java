@@ -3,12 +3,14 @@ package com.pro.snowball.api.model.db;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pro.common.modules.api.dependencies.model.BaseModel;
 import com.pro.framework.javatodb.annotation.JTDField;
+import com.pro.framework.javatodb.annotation.JTDTable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 @ApiModel(description = "远程服务器")
+@JTDTable(entityId = 10001, module = "snowball")
 public class RemoteServer extends BaseModel {
     @ApiModelProperty(value = "别名")
     private String name;

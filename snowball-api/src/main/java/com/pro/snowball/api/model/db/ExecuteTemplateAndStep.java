@@ -23,18 +23,10 @@ public class ExecuteTemplateAndStep extends IdModel implements IConfigClass {
     private Long stepId;
     @ApiModelProperty(value = "备注")
     private String remark;
-    @ApiModelProperty(value = "步骤")
-    private Integer step;
+    @ApiModelProperty(value = "推荐")
+    private Integer sort;
+    @ApiModelProperty(value = "开关")
+    private Boolean enabled;
     @ApiModelProperty(value = "创建时间")
     protected LocalDateTime createTime;
-
-    @Override
-    public Boolean getEnabled() {
-        return true;
-    }
-
-    @Override
-    public Integer getSort() {
-        return 0;
-    }
 }

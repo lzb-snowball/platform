@@ -106,7 +106,7 @@ public class RemoteCommandExecutor {
 
     // 检查日志文件中是否包含 Spring Boot 启动成功的标志
     private static boolean checkIfSpringBootStarted(String logFilePath) {
-        // 这里可以根据日志内容匹配一些 Spring Boot 启动成功的关键字
+        // 这里可以根据日志匹配一些 Spring Boot 启动成功的关键字
         // 比如：检查是否包含类似 "Started Application in ..." 这样的日志
         try {
             // 读取日志文件内容

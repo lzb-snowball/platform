@@ -10,17 +10,17 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "我的执行模板的参数")
+@ApiModel(description = "我的模板的参数")
 @JTDTable(entityId = 10002, module = "snowball")
 public class MyExecuteTemplateParam extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "我的模板Id")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long myTemplateId;
     @ApiModelProperty(value = "执行步骤Id")
-    @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id", defaultValue = "默认不指定则作用于全局")
+    @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则作用于全局")
     private String stepId;
     @ApiModelProperty(value = "执行步骤命令行Id")
-    @JTDField(entityClass = ExecuteStepCommand.class, entityClassKey = "id", entityClassTargetProp = "id", defaultValue = "默认不指定则作用于全局")
+    @JTDField(entityClass = ExecuteStepCommand.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则作用于全局")
     private String stepCommandId;
     @ApiModelProperty(value = "编号")
     private String code;

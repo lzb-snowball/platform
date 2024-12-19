@@ -1,6 +1,7 @@
 package template;
 
 import lombok.SneakyThrows;
+import com.pro.snowball.common.service.xmlparse.XmlParser;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +23,7 @@ public class MyBatisTemplateParserTest {
         params.put("ids", Arrays.asList(1, 2, 3));
 
         // 解析 SQL 模板
-        String finalText = MyBatisTemplateParser.parseTextTemplate(textTemplate, params);
+        String finalText = XmlParser.parseTextTemplate(textTemplate, params);
 
         System.out.println("Final: " + finalText);
     }

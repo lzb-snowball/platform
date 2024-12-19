@@ -12,13 +12,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@ApiModel(description = "执行模板和步骤的关联")
+@ApiModel(description = "模板配置和步骤配置的关联")
 @JTDTable(entityId = 10005, module = "snowball")
 public class ExecuteTemplateAndStep extends IdModel implements IConfigClass {
-    @ApiModelProperty(value = "模板")
+    @ApiModelProperty(value = "模板配置")
     @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long templateId;
-    @ApiModelProperty(value = "步骤")
+    @ApiModelProperty(value = "步骤配置")
     @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long stepId;
     @ApiModelProperty(value = "备注")

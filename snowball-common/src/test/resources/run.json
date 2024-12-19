@@ -26,13 +26,13 @@
   {
     "type": "cmd",
     "params": {
-      "cmd": "sshpass -p \"aaaaaaaaa\" scp -o StrictHostKeyChecking=no -q @/platform/snowball-user/target/snowball-user.jar root@192.168.1.1:/project/snowball/snowball-user.jar "
+      "cmd": "scp -o StrictHostKeyChecking=no -q @/platform/snowball-user/target/snowball-user.jar root@192.168.1.1:/project/snowball/snowball-user.jar "
     }
   },
   {
     "type": "cmd",
     "params": {
-      "cmd": "cd /project/snowball && ps aux | grep 'snowball-user.jar' | awk '{print $2}' | xargs kill -9 || true && java -Xms1024m -Xmx1024m -Dloader.path=/project/snowball/lib -jar -Dspring.profiles.active=prod,platform /project/snowball/snowball-user.jar "
+      "cmd": "  "
     }
   },
   {}

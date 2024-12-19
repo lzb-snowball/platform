@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "执行步骤")
+@ApiModel(description = "步骤配置")
 @JTDTable(entityId = 10009, module = "snowball")
 public class ExecuteStep extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "步骤名称")

@@ -1,14 +1,13 @@
-package template;
+package com.pro.snowball.common.service.xmlparse;
 
-import template.condition.*;
-import template.core.ConditionContext;
+import com.pro.snowball.common.service.xmlparse.condition.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyBatisTemplateParser {
+public class XmlParser {
 
     // 创建 ConditionContext 实例来管理不同的条件解析器
     private static final ConditionContext conditionContext = new ConditionContext();
@@ -153,7 +152,8 @@ public class MyBatisTemplateParser {
     // 替换模板中的变量并解析
     public static String parseTextTemplate(String textTemplate, Map<String, Object> params) {
         // 处理 <foreach> 和 <if> 标签
-        String resultText = applyForEach(textTemplate.replaceAll("\\s{2,}", "  "), params);
+//        .replaceAll("\\s{2,}", "  ")
+        String resultText = applyForEach(textTemplate, params);
         resultText = applyIfCondition(resultText, params);
         return resultText;
     }

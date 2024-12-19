@@ -1,8 +1,8 @@
-package template.core;
+package com.pro.snowball.common.service.xmlparse;
 
 
 
-import template.condition.ConditionEvaluator;
+import com.pro.snowball.common.service.xmlparse.condition.ConditionEvaluator;
 
 import java.util.HashMap;
 import java.util.Map;

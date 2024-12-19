@@ -1,0 +1,4 @@
+###execType=remote
+<foreach collection="repositories" item="repository">
+git clone #{repository}
+</foreach>

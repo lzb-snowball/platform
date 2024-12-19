@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "执行模板的初始配置")
+@ApiModel(description = "模板配置")
 @JTDTable(entityId = 10006, module = "snowball")
 public class ExecuteTemplate extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "名称")

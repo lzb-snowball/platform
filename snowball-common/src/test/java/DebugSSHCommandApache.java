@@ -1,10 +1,7 @@
-package command;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Slf4j
 public class DebugSSHCommandApache {
 
+    private static final String workspace= "/Users/zubin/snowball-workspace";
     private static final String PRIVATE_KEY_PATH = "/Users/zubin/.ssh/id_rsa_github2";
     private static final String SERVER_IP = "111.230.10.171";
 
@@ -20,6 +18,7 @@ public class DebugSSHCommandApache {
     private static final LogOutputStream logOutputStreamError = new LogOutputStream(log);
 
     private static final List<String> commands = List.of(
+
             """
                 pid=$(ps -ef | grep '/project/snowball/snowball-user.jar' | grep -v grep | awk '{print $2}')
                 if [ -n "$pid" ]; then

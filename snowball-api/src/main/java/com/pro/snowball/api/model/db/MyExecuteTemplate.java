@@ -9,13 +9,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "我的执行模板")
+@ApiModel(description = "我的模板")
 @JTDTable(entityId = 10003, module = "snowball")
 public class MyExecuteTemplate extends BaseModel implements IConfigClass {
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "分组")
     @JTDField(entityClass = MyExecuteGroup.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long groupId;
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "模板配置")
     @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long templateId;
     @ApiModelProperty(value = "名称")

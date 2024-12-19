@@ -2,6 +2,7 @@ package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
 import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
+import com.pro.common.modules.api.dependencies.model.classes.IUserRecordClass;
 import com.pro.framework.javatodb.annotation.JTDField;
 import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.framework.javatodb.constant.JTDConst;
@@ -10,9 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "执行订单步骤")
+@ApiModel(description = "执行订单的步骤")
 @JTDTable(entityId = 10011, module = "snowball")
-public class ExecuteOrderStep extends BaseModel implements IConfigClass {
+public class ExecuteOrderStep extends BaseModel implements IUserRecordClass {
     @ApiModelProperty(value = "序号")
     private Integer no;
     @ApiModelProperty(value = "对应订单id")
@@ -36,12 +37,12 @@ public class ExecuteOrderStep extends BaseModel implements IConfigClass {
     transient private Integer commandNoCurrent;
 
     @Override
-    public Boolean getEnabled() {
-        return true;
+    public Long getUserId() {
+        return 0L;
     }
 
     @Override
-    public Integer getSort() {
-        return 0;
+    public void setUserId(Long userId) {
+
     }
 }

@@ -1,16 +1,14 @@
-package template;
-
+import com.pro.snowball.common.service.xmlparse.XmlParser;
 import lombok.SneakyThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyBatisTemplateParserRun {
+public class XmlParserTest {
 
     /**
      * 当前服务器需要安装
@@ -22,7 +20,7 @@ public class MyBatisTemplateParserRun {
     @SneakyThrows
     public static void main(String[] args) {
         // 模拟从 XML 中提取 SQL 模板
-        String textTemplate = Files.readString(Path.of("/Users/zubin/IdeaProjects/snowball-github/framework/framework-cache/src/test/java/com/pro/framework/cache/template/run.xml"));
+        String textTemplate = Files.readString(Path.of("/Users/zubin/IdeaProjects/snowball/platform/snowball-common/src/test/resources/run2.xml"));
 
         // 模拟输入的参数
         Map<String, Object> params = new HashMap<>();
@@ -32,23 +30,25 @@ public class MyBatisTemplateParserRun {
         secrets.put("SERVER_IP", "192.168.1.1");
         params.put("secrets", secrets);
         params.put("repositories", List.of(
-                "https://github.com/lzb-snowball/platform",
-                "https://github.com/lzb-snowball/platform",
-                "https://github.com/lzb-snowball/platform"));
+                "git@github.com:lzb-framework/framework.git",
+                "git@github.com:lzb-parent/parent.git",
+                "git@github.com:lzb-snowball/platform.git"
+        ));
         params.put("modules", Arrays.asList("user"));
 //        params.put("modules", Arrays.asList("user", "admin", "agent", "libs"));
 
-        // 解析 SQL 模板
-        String finalText = MyBatisTemplateParser.parseTextTemplate(textTemplate, params);
+        // 解析 SQL 模板 类似 MyBatisTemplate
+        String finalText = XmlParser.parseTextTemplate(textTemplate, params);
         System.out.println("finalText: \n" + finalText);
 
-        // 解析模板
-        String jsonArray = convertTemplateToJsonArray(finalText);
-
-        // 打印输出
-        System.out.println("Generated JSON Array: \n" + jsonArray);
-        Path path = Path.of("/Users/zubin/IdeaProjects/snowball-github/framework/framework-cache/src/test/java/com/pro/framework/cache/template/run.json");
-        Files.write(path, jsonArray.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        new DebugLocalCommand().executeLocalCommands(new String[]{"cd /Users/zubin/snowball-workspace",finalText});
+//        // 解析模板
+//        String jsonArray = convertTemplateToJsonArray(finalText);
+//
+//        // 打印输出
+//        System.out.println("Generated JSON Array: \n" + jsonArray);
+//        Path path = Path.of("/Users/zubin/IdeaProjects/snowball/platform/snowball-common/src/test/resources/run.json");
+//        Files.write(path, jsonArray.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     // 替换转义字符

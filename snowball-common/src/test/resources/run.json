@@ -1,39 +1,7 @@
-[
-  {
-    "type": "git_clone_pull",
-    "params": {
-      "repository": "https://github.com/lzb-snowball/platform"
+{
+  tableConfigs: {
+    search: {
+      hide: true
     }
-  },
-  {
-    "type": "git_clone_pull",
-    "params": {
-      "repository": "https://github.com/lzb-snowball/platform"
-    }
-  },
-  {
-    "type": "git_clone_pull",
-    "params": {
-      "repository": "https://github.com/lzb-snowball/platform"
-    }
-  },
-  {
-    "type": "maven_install",
-    "params": {
-      "path": "@/parent"
-    }
-  },
-  {
-    "type": "cmd",
-    "params": {
-      "cmd": "scp -o StrictHostKeyChecking=no -q @/platform/snowball-user/target/snowball-user.jar root@192.168.1.1:/project/snowball/snowball-user.jar "
-    }
-  },
-  {
-    "type": "cmd",
-    "params": {
-      "cmd": "  "
-    }
-  },
-  {}
-]
+  }
+}

@@ -17,10 +17,10 @@ public class MyExecuteTemplateParam extends BaseModel implements IConfigClass {
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long myTemplateId;
     @ApiModelProperty(value = "执行步骤Id")
-    @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则作用于全局")
+    @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则不限制")
     private String stepId;
     @ApiModelProperty(value = "执行步骤命令行Id")
-    @JTDField(entityClass = ExecuteStepCommand.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则作用于全局")
+    @JTDField(entityClass = ExecuteStepCommand.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则不限制")
     private String stepCommandId;
     @ApiModelProperty(value = "编号")
     private String code;

@@ -13,11 +13,11 @@ import lombok.Data;
 @ApiModel(description = "步骤配置_命令行")
 @JTDTable(entityId = 10008, module = "snowball")
 public class ExecuteStepCommand extends BaseModel implements IConfigClass {
+    @ApiModelProperty(value = "名称")
+    private String name;
     @ApiModelProperty(value = "步骤配置")
     @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long stepId;
-    @ApiModelProperty(value = "名称")
-    private String name;
     @ApiModelProperty(value = "内容")
     @JTDField(type = JTDConst.EnumFieldType.text, uiType = JTDConst.EnumFieldUiType.xml)
     private String content;

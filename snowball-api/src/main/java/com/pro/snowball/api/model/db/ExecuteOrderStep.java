@@ -16,13 +16,13 @@ import lombok.Data;
 public class ExecuteOrderStep extends BaseModel implements IUserRecordClass {
     @ApiModelProperty(value = "序号")
     private Integer no;
-    @ApiModelProperty(value = "对应订单id")
+    @ApiModelProperty(value = "订单id")
 //    @JTDField(entityClass = ExecuteOrder.class, entityClassKey = "id", entityClassTargetProp = "id") // 数据量太大了,暂时不做显性关联
     private Long orderId;
-    @ApiModelProperty(value = "最后一行_运行日志")
+    @ApiModelProperty(value = "最后运行日志")
     @JTDField(mainLength = 2048)
     private String infoContent;
-    @ApiModelProperty(value = "最后一行_错误日志")
+    @ApiModelProperty(value = "最后错误日志")
     @JTDField(mainLength = 2048)
     private String errorContent;
     @ApiModelProperty(value = "是否成功")

@@ -15,18 +15,18 @@ import java.time.LocalDateTime;
 @ApiModel(description = "执行订单")
 @JTDTable(entityId = 10012, module = "snowball")
 public class ExecuteOrder extends BaseModel implements IUserRecordClass {
-    @ApiModelProperty(value = "对应我的模板Id")
+    @ApiModelProperty(value = "我的模板Id")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id") // 数据量太大了,暂时不做显性关联
     private Long myTemplateId;
-    @ApiModelProperty(value = "最后一行_运行日志")
+    @ApiModelProperty(value = "最后运行日志")
     @JTDField(mainLength = 2048)
     private String infoContent;
-    @ApiModelProperty(value = "最后一行_错误日志")
+    @ApiModelProperty(value = "最后错误日志")
     @JTDField(mainLength = 2048)
     private String errorContent;
     @ApiModelProperty(value = "状态")
     private EnumExecuteOrderState state;
-    @ApiModelProperty(value = "状态最后更变时间")
+    @ApiModelProperty(value = "状态更变时间")
     private LocalDateTime stateTime;
     @ApiModelProperty(value = "总共几步")
     private Integer stepNoAll;

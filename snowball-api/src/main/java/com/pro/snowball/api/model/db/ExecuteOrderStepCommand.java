@@ -16,10 +16,10 @@ import lombok.Data;
 public class ExecuteOrderStepCommand extends BaseModel implements IUserRecordClass {
     @ApiModelProperty(value = "序号")
     private Integer no;
-    @ApiModelProperty(value = "对应订单id")
+    @ApiModelProperty(value = "订单id")
     //    @JTDField(entityClass = ExecuteOrder.class, entityClassKey = "id", entityClassTargetProp = "id") // 数据量太大了,暂时不做显性关联
     private Long orderId;
-    @ApiModelProperty(value = "对应订单步骤id")
+    @ApiModelProperty(value = "订单步骤id")
     //    @JTDField(entityClass = ExecuteOrderStep.class, entityClassKey = "id", entityClassTargetProp = "id") // 数据量太大了,暂时不做显性关联
     private Long orderStepId;
     @ApiModelProperty(value = "执行配置内容")

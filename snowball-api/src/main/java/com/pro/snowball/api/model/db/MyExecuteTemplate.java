@@ -30,12 +30,12 @@ public class MyExecuteTemplate extends BaseModel implements IConfigClass {
     private Integer sort;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;
-    @ApiModelProperty(value = "最近一笔订单")
+    @ApiModelProperty(value = "最后订单")
     @JTDField(defaultValue = "NULL", notNull = JTDConst.EnumFieldNullType.can_null)
     private Long lastOrderId;
-    @ApiModelProperty(value = "最近一笔订单执行状态")
+    @ApiModelProperty(value = "最后订单状态")
     @JTDField(defaultValue = "NULL", notNull = JTDConst.EnumFieldNullType.can_null)
     private EnumExecuteOrderState lastOrderState;
-    @ApiModelProperty(value = "最近一笔订单执行状态最后更变时间")
+    @ApiModelProperty(value = "最后订单状态时间")
     private LocalDateTime lastOrderStateTime;
 }

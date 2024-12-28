@@ -1,5 +1,6 @@
 package com.pro.snowball.api.enums;
 
+import com.pro.framework.api.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum EnumExecuteStepParamInputType {
+public enum EnumExecuteStepParamInputType implements IEnum {
 
     SERVER("选择服务器列表"),
     FIX("配置固定值"),

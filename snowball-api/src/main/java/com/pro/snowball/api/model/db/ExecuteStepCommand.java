@@ -27,6 +27,9 @@ public class ExecuteStepCommand extends BaseModel implements IConfigClass {
     private Integer sort;
     @ApiModelProperty(value = "在远程服务器执行", notes = "注:scp一般在本地执行-虽然传输到远程服务器")
     private Boolean remoteServerFlag;
+    @ApiModelProperty(value = "远程服务器列表取值的参数模型")
+    @JTDField(entityClass = ExecuteParamModel.class, defaultValue = "servers")
+    private String remoteServerModelCode;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;
 }

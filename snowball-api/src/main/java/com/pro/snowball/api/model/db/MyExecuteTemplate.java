@@ -19,7 +19,7 @@ public class MyExecuteTemplate extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "名称")
     private String name;
     @ApiModelProperty(value = "分组")
-    @JTDField(entityClass = MyExecuteGroup.class, entityClassKey = "id", entityClassTargetProp = "id")
+    @JTDField(entityClass = ExecuteGroup.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long groupId;
     @ApiModelProperty(value = "模板配置")
     @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
@@ -38,4 +38,10 @@ public class MyExecuteTemplate extends BaseModel implements IConfigClass {
     private EnumExecuteOrderState lastOrderState;
     @ApiModelProperty(value = "最后订单状态时间")
     private LocalDateTime lastOrderStateTime;
+    @ApiModelProperty(value = "订单成功次数")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
+    private Integer orderSuccessTimes;
+    @ApiModelProperty(value = "订单成功总耗时_秒")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
+    private Integer orderSuccessSeconds;
 }

@@ -1,5 +1,6 @@
 package com.pro.snowball.api.enums;
 
+import com.pro.framework.api.enums.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,11 +9,12 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum EnumExecuteOrderState {
-    SUCCESS("成功"),
-    DOING("进行中"),
-    FAIL("失败"),
-    STOP("手动停止"),
+public enum EnumExecuteOrderState implements IEnum {
+//    INIT("初始化"),
+    DOING("运行中"),        // 后台开始
+    SUCCESS("运行成功"),    // 自动成功
+    FAIL("错误终止"),       // 错误终止
+    STOP("手动停止"),       // 手动停止
     ;
     private final String label;
 }

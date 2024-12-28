@@ -1,0 +1,10 @@
+common:
+  files:
+    modules:
+      cfg:
+        code: cfg
+        label: 管理员上传文件
+        dateFolder: true
+      snowball:
+        code: snowball
+        label: 滚雪球项目文件

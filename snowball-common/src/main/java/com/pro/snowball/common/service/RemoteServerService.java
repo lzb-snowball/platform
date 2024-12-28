@@ -18,6 +18,7 @@ import java.util.List;
 public class RemoteServerService extends BaseService<RemoteServerDao, RemoteServer> {
     public List<RemoteServer> getActiveList(RemoteServer remoteServer) {
         return this.lambdaQuery().setEntity(remoteServer)
+                .orderByAsc(RemoteServer::getSort)
                 .eq(RemoteServer::getEnabled, CommonConst.Num.YES)
                 .list();
     }

@@ -1,6 +1,5 @@
 package com.pro.snowball.common.service;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.pro.common.modules.api.dependencies.CommonConst;
 import com.pro.framework.mybatisplus.BaseService;
 import com.pro.snowball.api.model.db.ExecuteStepCommand;
@@ -11,15 +10,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 执行步骤命令行服务
+ * 步骤配置_命令行服务
  */
 @Service
 @Slf4j
 public class ExecuteStepCommandService extends BaseService<ExecuteStepCommandDao, ExecuteStepCommand> {
-    public List<ExecuteStepCommand> getActiveList(ExecuteStepCommand executeStepCommand) {
+    public List<ExecuteStepCommand> getActiveList(ExecuteStepCommand executeStepCommand, List<Long> stepIds) {
         return this.lambdaQuery().setEntity(executeStepCommand)
                 .orderByAsc(ExecuteStepCommand::getSort)
                 .eq(ExecuteStepCommand::getEnabled, CommonConst.Num.YES)
+                .in(ExecuteStepCommand::getStepId, stepIds)
+                .last(stepIds.isEmpty(), "limit 0")
                 .list();
     }
 }

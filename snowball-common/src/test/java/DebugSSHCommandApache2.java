@@ -8,7 +8,7 @@ import java.util.List;
 
 @SpringBootTest
 @Slf4j
-public class DebugSSHCommandApache {
+public class DebugSSHCommandApache2 {
 
     private static final String workspace= "/Users/zubin/snowball-workspace";
     private static final String PRIVATE_KEY_PATH = "/Users/zubin/.ssh/id_rsa_github2";
@@ -20,22 +20,34 @@ public class DebugSSHCommandApache {
     private static final List<String> commands = List.of(
 
             """
-                pid=$(ps -ef | grep '/project/snowball/snowball-user.jar' | grep -v grep | awk '{print $2}')
-                if [ -n "$pid" ]; then
-                    kill -9 $pid
-                    echo "Previous process stopped."
-                fi
-                export LC_ALL=en_US.UTF-8
-                cd /project/snowball/
-                nohup java -Xms128m -Xmx1024m -Dloader.path=/project/snowball/lib -jar -Dfile.encoding=UTF-8 -Dspring.profiles.active=prod,platform /project/snowball/snowball-user.jar > /project/snowball/user.log 2>&1 & disown
-                sleep 3
-                tail -f /project/snowball/user.log | while read line; do
-                    echo "$line"
-                    if [[ "$line" == *"Started"* ]]; then
-                        echo "Application started successfully!"
-                        break
-                    fi
-                done
+                      # 结束旧进程
+                                     	pid=$(ps -ef | grep '/project/snowball/snowball-user.jar' | grep -v grep | awk '{print $2}')
+                             			if [ -n "$pid" ]; then
+                             			    kill -9 $pid
+                             			    echo "Previous process stopped."
+                             			fi
+                             		 \s
+                             		    # 备份旧的 JAR 文件和日志文件
+                                         BACKUP_DIR="/project/snowball/backup/$(date +%Y%m%d%H%M%S)"
+                                         mkdir -p "$BACKUP_DIR"
+                                         cp /project/snowball/snowball-user.jar "$BACKUP_DIR/snowball-user.jar"
+                                         cp /project/snowball/user.log "$BACKUP_DIR/user.log"
+                                         echo "Backup completed to $BACKUP_DIR."
+                                      \s
+                                         # 启动新进程
+                             		    export LC_ALL=en_US.UTF-8
+                             		    cd /project/snowball/
+                             		    nohup java -Xmx1024m -Dloader.path=/project/snowball/lib -jar -Dfile.encoding=UTF-8 -Dspring.profiles.active=prod,platform /project/snowball/snowball-user.jar > /project/snowball/user.log 2>&1 & disown
+                             		    sleep 3
+                             		 \s
+                                         # 检查启动成功
+                             		    tail -f /project/snowball/user.log | while read line; do
+                             		    echo "$line"
+                             		    if [[ "$line" == *"Started"* ]]; then
+                             		    echo "Application started successfully!"
+                             		    break
+                             		    fi
+                             		    done
             """
     );
 

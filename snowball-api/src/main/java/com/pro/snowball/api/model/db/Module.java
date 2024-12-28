@@ -13,7 +13,7 @@ import lombok.Data;
 @ApiModel(description = "模块")
 @JTDTable(entityId = 10013, module = "snowball")
 public class Module extends BaseModel implements IConfigClass {
-    @ApiModelProperty(value = "我的模板Id", notes = "多选 不选默认是全局模块")
+    @ApiModelProperty(value = "我的模板", notes = "多选 不选默认是全局模块")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id", javaTypeEnumClassMultiple = true) // 数据量太大了,暂时不做显性关联
     private String myTemplateIds;
     @ApiModelProperty(value = "远程服务器Id", notes = "多选 不选默认是全局模块")

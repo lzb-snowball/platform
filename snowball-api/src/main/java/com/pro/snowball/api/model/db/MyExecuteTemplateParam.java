@@ -13,7 +13,7 @@ import lombok.Data;
 @ApiModel(description = "我的模板的参数")
 @JTDTable(entityId = 10002, module = "snowball")
 public class MyExecuteTemplateParam extends BaseModel implements IConfigClass {
-    @ApiModelProperty(value = "我的模板Id")
+    @ApiModelProperty(value = "我的模板")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     private Long myTemplateId;
     @ApiModelProperty(value = "执行步骤Id")

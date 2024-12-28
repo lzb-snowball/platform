@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 执行模板的初始配置服务
+ * 模板配置服务
  */
 @Service
 @Slf4j

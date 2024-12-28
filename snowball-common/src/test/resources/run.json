@@ -1,7 +1,5 @@
-{
-  tableConfigs: {
-    search: {
-      hide: true
-    }
-  }
-}
+
+    <foreach collection="modules" item="module">
+        
+    
+</foreach>

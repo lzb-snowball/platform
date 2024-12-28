@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @ApiModel(description = "我的分组")
 @JTDTable(entityId = 10004, module = "snowball")
-public class MyExecuteGroup extends BaseModel implements IConfigClass {
+public class ExecuteGroup extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "参数名称")
     private String name;
     @ApiModelProperty(value = "排序")

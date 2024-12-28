@@ -1,6 +1,9 @@
 package generator;
 
 import com.pro.framework.generator.main.generator.main.GeneratorUtil_class_platform;
+import com.pro.snowball.api.model.db.ExecuteParam;
+import com.pro.snowball.api.model.db.ExecuteParamField;
+import com.pro.snowball.api.model.db.ExecuteParamModel;
 import com.pro.snowball.api.model.db.Module;
 
 import java.util.Arrays;
@@ -17,7 +20,9 @@ public class GeneratorUtilMain extends GeneratorUtil_class_platform {
      */
     public static void main(String[] args) {
         List<Class<?>> classes = Arrays.asList(
-                Module.class
+                ExecuteParam.class,
+                ExecuteParamField.class,
+                ExecuteParamModel.class
         );
         /**
          * 生成 DemoDao DemoService (DemoController)

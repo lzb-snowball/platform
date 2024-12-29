@@ -17,8 +17,8 @@ import static com.pro.framework.javatodb.constant.JTDConst.EnumFieldUiType.texta
 @AllArgsConstructor
 public enum EnumAuthDictSnowball implements IEnumAuthDict, IEnumToDbEnum<AuthDict> {
 
-    SNOWBALL_CONFIG("彩票配置", "", null, text, false, null, null, null, null, null, 1, null),
-    SNOWBALL_COMMISSION_PHONES("购买彩票模拟手机号", "1481612552\r\n1592855442\r\n1344137322\r\n1918759265", SNOWBALL_CONFIG, textarea, null, null, null, null, "文本域，多个换行区别", null, null, null),
+    SNOWBALL_CONFIG("滚雪球配置", "", null, text, false, null, null, null, null, null, 1, null),
+    SNOWBALL_COMMISSION_PHONES("购买滚雪球模拟手机号", "1481612552\r\n1592855442\r\n1344137322\r\n1918759265", SNOWBALL_CONFIG, textarea, null, null, null, null, "文本域，多个换行区别", null, null, null),
 
     ;
     private final String label;

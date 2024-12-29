@@ -1,10 +1,7 @@
 package com.pro.snowball.admin.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pro.common.modules.api.dependencies.R;
-import com.pro.framework.api.util.CollUtils;
 import com.pro.snowball.api.model.db.*;
-import com.pro.snowball.common.service.DemoService;
 import com.pro.snowball.common.service.ExecuteOrderService;
 import com.pro.snowball.common.service.ExecuteParamService;
 import com.pro.snowball.common.service.MyExecuteTemplateService;
@@ -31,7 +28,7 @@ public class AdminExecuteController {
 
     @GetMapping("/loadCommands")
     @ApiOperation(value = "查询执行所需参数")
-    public R<List<ExecuteOrderStepCommand>> get(ExecuteOrder request) {
+    public R<ExecuteOrder> get(ExecuteOrder request) {
         Long myTemplateId = request.getMyTemplateId();
 
         MyExecuteTemplate myTemplate = myExecuteTemplateService.getById(myTemplateId);
@@ -44,7 +41,10 @@ public class AdminExecuteController {
             // 未配置参数
             command.setContentParamRequiredsLack(contentParamRequireds);
         }
-        return R.ok(commands);
+        ExecuteOrder order =new ExecuteOrder();
+        order.setOrderStepCommands(commands);
+        order.setExecuteParamMap(paramMap);
+        return R.ok(order);
     }
 
 

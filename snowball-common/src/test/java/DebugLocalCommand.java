@@ -1,3 +1,4 @@
+import com.pro.snowball.common.service.cmd.sub.LogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +45,7 @@ public class DebugLocalCommand {
                 // 执行命令
                 processBuilder.command("bash", "-c", command);
                 Process process = processBuilder.start();
-                // 获取输出流和错误流并将其传递给 LogOutputStream
+                // 获取输出流和错误流并将其传递给 com.pro.snowball.common.service.cmd.sub.LogOutputStream
                 StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), logOutputStreamInfo); // 处理标准输出
                 StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), logOutputStreamError); // 处理错误输出
 

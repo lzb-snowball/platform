@@ -1,3 +1,5 @@
+package com.pro.snowball.common.service.cmd.sub;
+
 import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;

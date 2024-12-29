@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @ApiModel(description = "执行订单的步骤命令行")
@@ -35,6 +36,8 @@ public class ExecuteOrderStepCommand extends BaseModel implements IUserRecordCla
     private String stepName;
     @ApiModelProperty(value = "步骤排序")
     private Integer stepSort;
+    @ApiModelProperty(value = "步骤序号1到n")
+    private Integer stepNo;
     @ApiModelProperty(value = "解析前执行内容")
     @JTDField(type = JTDConst.EnumFieldType.text, uiType = JTDConst.EnumFieldUiType.xml)
     private String content;
@@ -51,12 +54,16 @@ public class ExecuteOrderStepCommand extends BaseModel implements IUserRecordCla
     private Boolean success;
     @ApiModelProperty(value = "备注")
     private String remark;
+//    @ApiModelProperty(value = "在远程服务器执行", notes = "注:scp一般在本地执行-虽然传输到远程服务器")
+//    private Boolean remoteServerFlag;
 
     @ApiModelProperty(value = "需要参数")
-    transient private List<String> contentParamRequireds;
+    transient List<String> contentParamRequireds;
 
     @ApiModelProperty(value = "需要参数未配置的")
     transient private List<String> contentParamRequiredsLack;
+    @ApiModelProperty(value = "最终参数")
+    transient private Map<String, Object> inputParamMapResult;
 
 
     @Override

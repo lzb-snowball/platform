@@ -5,6 +5,9 @@ common:
         code: cfg
         label: 管理员上传文件
         dateFolder: true
-      snowball:
-        code: snowball
-        label: 滚雪球项目文件
+      snowballWorkspace:
+        code: snowball_workspace
+        label: 滚雪球工作空间
+      snowballLog:
+        code: snowball_log
+        label: 滚雪球日志文件

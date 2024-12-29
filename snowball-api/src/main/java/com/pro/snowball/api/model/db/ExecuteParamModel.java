@@ -28,5 +28,5 @@ public class ExecuteParamModel extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "是否多值")
     private Boolean multipleValue;
     @ApiModelProperty(value = "系统固有")
-    private Boolean system;
+    private Boolean systemFlag;
 }

@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @ApiModel(description = "参数可选值")
 @JTDTable(entityId = 10016, module = "snowball", sequences = {
-        "UNIQUE KEY `uk_modelCode_code` (`model_code`,`group_id`,`my_template_id`)",
+        "UNIQUE KEY `uk_modelCode_groupId_myTemplateId_templateId` (`model_code`,`group_id`,`my_template_id`,`template_id`)",
 })
 public class ExecuteParam extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "我的我的分组")
@@ -21,15 +21,15 @@ public class ExecuteParam extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "我的模板")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id", notNull = JTDConst.EnumFieldNullType.can_null)
     private String myTemplateId;
-    @ApiModelProperty(value = "模板Id")
-    @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id", notNull = JTDConst.EnumFieldNullType.can_null)
-    private String templateId;
-    @ApiModelProperty(value = "执行步骤Id")
-    @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则不限制", notNull = JTDConst.EnumFieldNullType.can_null)
-    private String stepId;
-    @ApiModelProperty(value = "执行步骤命令行Id")
-    @JTDField(entityClass = ExecuteStepCommand.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则不限制", notNull = JTDConst.EnumFieldNullType.can_null)
-    private String stepCommandId;
+//    @ApiModelProperty(value = "模板Id")
+//    @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id", notNull = JTDConst.EnumFieldNullType.can_null)
+//    private String templateId;
+//    @ApiModelProperty(value = "执行步骤Id")
+//    @JTDField(entityClass = ExecuteStep.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则不限制", notNull = JTDConst.EnumFieldNullType.can_null)
+//    private String stepId;
+//    @ApiModelProperty(value = "执行步骤命令行Id")
+//    @JTDField(entityClass = ExecuteStepCommand.class, entityClassKey = "id", entityClassTargetProp = "id", description = "默认不指定则不限制", notNull = JTDConst.EnumFieldNullType.can_null)
+//    private String stepCommandId;
     @ApiModelProperty(value = "参数模型")
     @JTDField(entityClass = ExecuteParamModel.class, notEmpty = JTDConst.EnumFieldEmptyType.not_empty)
     private String modelCode;

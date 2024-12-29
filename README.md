@@ -1,1 +1,1 @@
-snowball 体育彩票
+snowball 滚雪球

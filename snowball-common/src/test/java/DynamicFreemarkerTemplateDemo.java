@@ -26,20 +26,23 @@ public class DynamicFreemarkerTemplateDemo {
         data.put("servers", servers);
         data.put("repositories", Arrays.asList("111","22"));
         data.put("modules", Arrays.asList(
-                Map.of("code", "user", "javaEnv", "-Xmx1024m")
+                Map.of("code", "libs", "javaEnv", "-Xmx1024m")
 //                Map.of("code", "module3", "javaEnv", "-Xmx1024m")
         ));
 
         // 动态生成模板字符串
         String templateContent = """
-
 <#list servers as server>
     <#list modules as module>
-        <#if module.code != "libs">
-            scp -i ${server.privateKeyLocalPath} @/platform/${platform}-${module.code}/target/${platform}-${module.code}.jar ${server.username}@${server.host}:/project/${platform}/${platform}-${module.code}.jar
+        <#if module.code == "libs">
+            scp -i ${server.privateKeyLocalPath} @/platform/${platform}-admin/target/libs.tar.gz ${server.username}@${server.host}:/project/${platform}/
+            <remote server="${json(server)}">
+                cd /project/${platform}/
+                tar -xzf libs.tar.gz
+            </remote>
         </#if>
     </#list>
-</#list>                
+</#list>
                 """;
 
         System.out.println(TemplateUtil.analysis(templateContent, data));

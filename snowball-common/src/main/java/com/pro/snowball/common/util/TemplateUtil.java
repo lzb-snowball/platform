@@ -1,9 +1,11 @@
 package com.pro.snowball.common.util;
 
+import cn.hutool.json.JSONUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -14,22 +16,38 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class TemplateUtil {
     // 创建 Freemarker 配置对象
     private static final Configuration cfg = new Configuration(Configuration.VERSION_2_3_31);
+
     static {
-        cfg.setClassForTemplateLoading(TemplateUtil.class, "/");
-        cfg.setDefaultEncoding("UTF-8");
+        try {
+            cfg.setClassForTemplateLoading(TemplateUtil.class, "/");
+            cfg.setDefaultEncoding("UTF-8");
+
+            // 注册自定义方法
+            cfg.setSharedVariable("json", new JsonStringMethod());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SneakyThrows
     public static String analysis(String templateContent, Map<String, Object> paramMap) {
+//        templateContent = templateContent.replace("<@remote", "&lt;@remote").replace("</@remote>", "&lt;/@remote&gt;");
+
         // 使用 StringReader 创建模板
         Template template = new Template("dynamicTemplate", new StringReader(templateContent), cfg);
 
         // 渲染模板并输出结果
         StringWriter writer = new StringWriter();
-        template.process(paramMap, writer);
+        try {
+            template.process(paramMap, writer);
+        } catch (Exception e) {
+            log.warn("freemarker error \n {} {}", templateContent, JSONUtil.toJsonPrettyStr(paramMap));
+            throw new RuntimeException(e);
+        }
         return writer.toString();
     }
 

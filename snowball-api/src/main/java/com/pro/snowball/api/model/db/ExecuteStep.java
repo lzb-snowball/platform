@@ -19,4 +19,6 @@ public class ExecuteStep extends BaseModel implements IConfigClass {
     private Integer sort;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;
+    @ApiModelProperty(value = "排序")
+    transient private Integer no;
 }

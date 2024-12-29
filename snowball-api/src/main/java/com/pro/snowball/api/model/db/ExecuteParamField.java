@@ -28,5 +28,5 @@ public class ExecuteParamField extends BaseModel implements IConfigClass {
     @ApiModelProperty(value = "开关")
     private Boolean enabled;
     @ApiModelProperty(value = "系统固有")
-    private Boolean system;
+    private Boolean systemFlag;
 }

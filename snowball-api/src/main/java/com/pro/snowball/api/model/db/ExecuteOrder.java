@@ -11,12 +11,16 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Data
 @ApiModel(description = "执行订单")
 @JTDTable(entityId = 10012, module = "snowball")
 public class ExecuteOrder extends BaseModel implements IUserOrderClass {
+    @ApiModelProperty(value = "订单编号")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
+    private String no;
     @ApiModelProperty(value = "我的模板")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     // 数据量太大了,暂时不做显性关联
@@ -25,7 +29,7 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     // 数据量太大了,暂时不做显性关联
     private Long templateId;
-//    @ApiModelProperty(value = "最后运行日志")
+    //    @ApiModelProperty(value = "最后运行日志")
 //    @JTDField(mainLength = 2048)
 //    private String infoContent;
 //    @ApiModelProperty(value = "最后错误日志")
@@ -38,6 +42,9 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     @ApiModelProperty(value = "总共几步")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private Integer stepNoAll;
+    @ApiModelProperty(value = "当前第几步")
+    @JTDField(defaultValue = "1")
+    private Integer stepNoCurrent;
     @ApiModelProperty(value = "备注")
     private String remark;
     @ApiModelProperty(value = "管理员Id")
@@ -45,19 +52,27 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     // 数据量太大了,暂时不做显性关联
     private Long adminId;
     @ApiModelProperty(value = "基础日志文件")
-    @JTDField(uiType = JTDConst.EnumFieldUiType.file)
+    @JTDField(uiType = JTDConst.EnumFieldUiType.file, mainLength = 1024)
     private String logFileFull;
     @ApiModelProperty(value = "错误日志文件")
-    @JTDField(uiType = JTDConst.EnumFieldUiType.file)
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
     private String logFileError;
+    @ApiModelProperty(value = "基础日志文件全路径")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
+    private String logFileFullInner;
+    @ApiModelProperty(value = "错误日志文件全路径")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
+    private String logFileErrorInner;
 
     @ApiModelProperty(value = "操作类型", notes = "base: 基础增删改 其他类型自定义")
     transient private String optType = "base";
 
-    @ApiModelProperty(value = "当前第几步")
-    transient private Integer stepNoCurrent = 1;
     @ApiModelProperty(value = "输入的执行参数")
     transient private Map<String, Object> inputParamMap;
+    @ApiModelProperty(value = "订单执行命令")
+    transient private List<ExecuteOrderStepCommand> orderStepCommands;
+    @ApiModelProperty(value = "订单执行参数")
+    transient private Map<String, ExecuteParam> executeParamMap;
 
     @Override
     public Long getUserId() {

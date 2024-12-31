@@ -1,11 +1,15 @@
 package com.pro.snowball.common.service;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.pro.common.modules.api.dependencies.message.ToSocket;
 import com.pro.common.modules.api.dependencies.model.BaseModel;
+import com.pro.common.modules.service.dependencies.modelauth.base.MessageService;
 import com.pro.common.modules.service.dependencies.properties.CommonProperties;
+import com.pro.common.modules.service.dependencies.util.SpringContextUtils;
 import com.pro.common.modules.service.dependencies.util.upload.FileUploadUtils;
 import com.pro.common.modules.service.dependencies.util.upload.UploadModuleModel;
 import com.pro.framework.api.structure.Tuple2;
@@ -24,6 +28,7 @@ import com.pro.snowball.common.util.TemplateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -38,6 +43,7 @@ import java.util.stream.IntStream;
 @Slf4j
 public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrder> {
 
+    MessageService messageService;
     ThreadService threadService;
     CommonProperties commonProperties;
     ExecuteStepService executeStepService;
@@ -58,6 +64,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
     }
 
     @Override
+//    @Transactional
     public boolean saveOrUpdate(ExecuteOrder entity) {
         String optType = entity.getOptType();
         boolean isNew = entity.getId() == null;
@@ -142,7 +149,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                         // 新线程 执行命令
                         List<ExecuteOrderStepCommand> finalOrderStepCommands = orderStepCommands;
                         threadService.startThread(SnowballConst.Str.THREAD_HEAD + orderNo,
-                                () -> executeOrderCommands(entity, finalOrderStepCommands));
+                                () -> SpringContextUtils.getBean(getClass())
+                                        .executeOrderCommands(entity, finalOrderStepCommands));
                         return true;
                     }
                     // 运行成功 自动成功
@@ -171,7 +179,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         return super.saveOrUpdate(entity);
     }
 
-    private void executeOrderCommands(ExecuteOrder entity, List<ExecuteOrderStepCommand> orderStepCommands) {
+//    @Transactional
+    public void executeOrderCommands(ExecuteOrder entity, List<ExecuteOrderStepCommand> orderStepCommands) {
         // 执行任务 记录日志文件
         String logFileFull = entity.getLogFileFullInner();
         String logFileError = entity.getLogFileErrorInner();
@@ -191,11 +200,14 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             for (ExecuteOrderStepCommand command : orderStepCommandsSub) {
                 // 执行单行命令
                 boolean success = this.executeOrderCommand(entity, command, logFileFull, logFileError);
+//                stepNo = ObjUtil.defaultIfNull(command.getStepNo(),1);
                 stepNo = command.getStepNo();
                 ExecuteOrder updateEntity = new ExecuteOrder();
                 updateEntity.setId(entity.getId());
                 updateEntity.setStepNoCurrent(stepNo);
-                this.saveOrUpdate(updateEntity);
+//                updateEntity.setUpdateTime(LocalDateTime.now());
+                super.saveOrUpdate(updateEntity);
+                messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
                 if (!success) {
                     successAll = false;
                     // socket推送步骤更新
@@ -206,7 +218,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         ExecuteOrder updateEntity = new ExecuteOrder();
         updateEntity.setId(entity.getId());
         updateEntity.setState(successAll ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
-        this.saveOrUpdate(updateEntity);
+        super.saveOrUpdate(updateEntity);
+        messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
     }
 
     private boolean executeOrderCommand(ExecuteOrder order, ExecuteOrderStepCommand orderCommand, String logFileFull, String logFileError) {
@@ -392,16 +405,28 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 
     @Override
     public boolean updateById(ExecuteOrder entity) {
+        messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, entity));
         this.beforeUpdate(entity);
         return super.updateById(entity);
     }
 
     private void beforeUpdate(ExecuteOrder entity) {
-        myExecuteTemplateService.lambdaUpdate()
-                .set(MyExecuteTemplate::getLastOrderState, entity.getState())
-                .set(MyExecuteTemplate::getLastOrderStateTime, entity.getStateTime())
-                .eq(MyExecuteTemplate::getLastOrderId, entity.getId())
-                .update();
+        LocalDateTime stateTime = entity.getStateTime();
+        EnumExecuteOrderState state = entity.getState();
+        if (state != null || stateTime != null) {
+            List<MyExecuteTemplate> templates = myExecuteTemplateService.lambdaQuery()
+                    .eq(MyExecuteTemplate::getLastOrderId, entity.getId())
+                    .list();
+            for (MyExecuteTemplate template : templates) {
+                MyExecuteTemplate update = new MyExecuteTemplate();
+                update.setId(template.getId());
+
+                update.setLastOrderStateTime(stateTime);
+                update.setLastOrderState(state);
+                myExecuteTemplateService.updateById(update);
+                messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.MyExecuteTemplate, update));
+            }
+        }
     }
 
     private static Map<String, JSONObject> jsonArrayToCodeMap(String jsonString) {

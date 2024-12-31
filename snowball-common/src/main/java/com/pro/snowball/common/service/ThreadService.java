@@ -3,6 +3,7 @@ package com.pro.snowball.common.service;
 import cn.hutool.core.map.WeakConcurrentMap;
 import com.pro.framework.api.util.AssertUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.concurrent.Future;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ThreadService {
     private final ThreadPoolTaskExecutor executor;
     private final Map<String, Future<?>> threadMap = new WeakConcurrentMap<>();
@@ -28,8 +30,16 @@ public class ThreadService {
             threadMap.remove(threadId);
         }
 
+        Runnable safeRunnable = () -> {
+            try {
+                runnable.run(); // 原始任务的执行逻辑
+            } catch (Exception e) {
+                // 记录日志或处理异常
+                log.error("Thread task encountered an error: {}", threadId, e);
+            }
+        };
         // 提交任务到线程池，并保存 Future 对象
-        Future<?> future = executor.submit(runnable);
+        Future<?> future = executor.submit(safeRunnable);
         threadMap.put(threadId, future);
     }
 

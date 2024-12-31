@@ -30,6 +30,7 @@ public class SnowballConst {
     }
 
     public static class EntityClass {
-        public static final String ExecuteOrder = "ExecuteOrder"; // 系统通知
+        public static final String ExecuteOrder = "ExecuteOrder";
+        public static final String MyExecuteTemplate = "MyExecuteTemplate";
     }
 }

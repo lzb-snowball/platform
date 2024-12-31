@@ -3,15 +3,11 @@ package com.pro.snowball.common.util;
 import cn.hutool.json.JSONUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +23,8 @@ public class TemplateUtil {
             cfg.setDefaultEncoding("UTF-8");
 
             // 注册自定义方法
-            cfg.setSharedVariable("json", new JsonStringMethod());
+            cfg.setSharedVariable("json", new FreemarkerMethodJson());
+            cfg.setSharedVariable("getGitName", new FreemarkerMethodGetGitName());
         } catch (Exception e) {
             e.printStackTrace();
         }

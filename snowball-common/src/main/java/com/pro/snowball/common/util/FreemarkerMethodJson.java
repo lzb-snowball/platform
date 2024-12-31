@@ -2,13 +2,12 @@ package com.pro.snowball.common.util;
 
 import cn.hutool.json.JSONUtil;
 import freemarker.template.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-public class JsonStringMethod implements TemplateMethodModelEx {
+public class FreemarkerMethodJson implements TemplateMethodModelEx {
     @Override
     public Object exec(List arguments) throws TemplateModelException {
         if (arguments.size() != 1) {

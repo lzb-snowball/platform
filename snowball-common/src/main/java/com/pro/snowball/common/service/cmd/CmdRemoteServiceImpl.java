@@ -22,16 +22,10 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
 
     @Override
     public boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile, String logKey) {
-        if (remoteServer == null || commands == null || commands.isEmpty()) {
-//            throw new IllegalArgumentException("Remote server and commands must not be null or empty");
-        }
-
         for (String command : commands) {
             boolean success = executeCommand(remoteServer, command, infoLogFile, errorLogFile, logKey);
             if (!success) {
-//                log.error("Failed to execute command: {}", command);
                 return false;
-//                throw new RuntimeException("Command execution failed for: " + command);
             }
         }
         return true;
@@ -42,9 +36,11 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
         DefaultExecutor executor = new DefaultExecutor();
         @Cleanup CmdRemoteLogger infoStream = new CmdRemoteLogger(infoLogFile, true, loggerService, logKey);
         @Cleanup CmdRemoteLogger errorStream = new CmdRemoteLogger(errorLogFile, true, loggerService, logKey);
+        // 输出 当前指令
+        infoStream.processLine(command, 0);
+
         PumpStreamHandler streamHandler = new PumpStreamHandler(infoStream, errorStream);
         executor.setStreamHandler(streamHandler);
-        infoStream.write(command.getBytes(StandardCharsets.UTF_8));
         try {
             CommandLine cmdLine = buildCommandLine(remoteServer, command);
             int exitCode = executor.execute(cmdLine);
@@ -53,14 +49,6 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
             log.error("Error executing command on {}", remoteServer.getHost(), e);
             return false;
         }
-//        finally {
-//            try {
-//                infoStream.close();
-//                errorStream.close();
-//            } catch (IOException e) {
-//                log.error("Failed to close log files", e);
-//            }
-//        }
     }
 
     private CommandLine buildCommandLine(RemoteServer remoteServer, String command) {

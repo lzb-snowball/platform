@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,8 +30,13 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
             // 异步处理输出流和错误流
             InputStream inputStream = process.getInputStream();
             InputStream errorStream = process.getErrorStream();
-            executorService.execute(new CmdLocalLogger(inputStream, infoLogFile,true, loggerService, logKey));
-            executorService.execute(new CmdLocalLogger(errorStream, errorLogFile,true, loggerService, logKey));
+            CmdLocalLogger loggerInfo = new CmdLocalLogger(inputStream, infoLogFile, true, loggerService, logKey);
+            CmdLocalLogger loggerError = new CmdLocalLogger(errorStream, errorLogFile, true, loggerService, logKey);
+            // 输出 当前指令
+            loggerInfo.writeLine(command);
+
+            executorService.execute(loggerInfo);
+            executorService.execute(loggerError);
 
             // 等待命令完成
             int exitCode = process.waitFor();

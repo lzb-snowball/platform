@@ -28,7 +28,7 @@ public class CmdRemoteLogger extends LogOutputStream {
 
     @Override
     @SneakyThrows
-    protected void processLine(String line, int level) {
+    public void processLine(String line, int level) {
         writer.write(line);
         // 统一的输出逻辑
         loggerService.receiveLine(logKey, line);

@@ -1,5 +1,3 @@
-package com.pro.snowball.common.service.cmd.sub;
-
 import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;
@@ -7,11 +5,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class LogOutputStream extends OutputStream {
+public class CmdLocalLogger extends OutputStream {
     private final Logger logger;
     private final ByteArrayOutputStream buffer;
 
-    public LogOutputStream(Logger logger) {
+    public CmdLocalLogger(Logger logger) {
         this.logger = logger;
         this.buffer = new ByteArrayOutputStream();
     }

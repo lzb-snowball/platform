@@ -28,4 +28,8 @@ public class SnowballConst {
          */
         public static final String PARAM_MODEL_CODE_SERVERS = "servers";
     }
+
+    public static class EntityClass {
+        public static final String ExecuteOrder = "ExecuteOrder"; // 系统通知
+    }
 }

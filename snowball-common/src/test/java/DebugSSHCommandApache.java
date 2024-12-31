@@ -1,4 +1,3 @@
-import com.pro.snowball.common.service.cmd.sub.LogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -15,8 +14,8 @@ public class DebugSSHCommandApache {
     private static final String PRIVATE_KEY_PATH = "/Users/zubin/.ssh/id_rsa_github2";
     private static final String SERVER_IP = "111.230.10.171";
 
-    private static final LogOutputStream logOutputStreamInfo = new LogOutputStream(log);
-    private static final LogOutputStream logOutputStreamError = new LogOutputStream(log);
+    private static final CmdLocalLogger logOutputStreamInfo = new CmdLocalLogger(log);
+    private static final CmdLocalLogger logOutputStreamError = new CmdLocalLogger(log);
 
     private static final List<String> commands = List.of(
 

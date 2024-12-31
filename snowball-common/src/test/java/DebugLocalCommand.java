@@ -1,4 +1,3 @@
-import com.pro.snowball.common.service.cmd.sub.LogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -9,8 +8,8 @@ public class DebugLocalCommand {
 
     private static final String WORKSPACE = "/Users/zubin/snowball-workspace";
 
-    private static final LogOutputStream logOutputStreamInfo = new LogOutputStream(log); // 输出流日志
-    private static final LogOutputStream logOutputStreamError = new LogOutputStream(log); // 错误流日志
+    private static final CmdLocalLogger logOutputStreamInfo = new CmdLocalLogger(log); // 输出流日志
+    private static final CmdLocalLogger logOutputStreamError = new CmdLocalLogger(log); // 错误流日志
 
     @Test
     public void testExecuteLocalCommands() {

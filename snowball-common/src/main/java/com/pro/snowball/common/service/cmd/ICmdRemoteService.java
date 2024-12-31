@@ -5,5 +5,5 @@ import com.pro.snowball.api.model.db.RemoteServer;
 import java.util.List;
 
 public interface ICmdRemoteService {
-    boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile);
+    boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile, String logKey);
 }

@@ -1,4 +1,3 @@
-import com.pro.snowball.common.service.cmd.sub.LogOutputStream;
 import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
@@ -8,9 +7,9 @@ import java.io.IOException;
 
 public class StreamGobbler implements Runnable {
     private InputStream inputStream;
-    private LogOutputStream logOutputStream;
+    private CmdLocalLogger logOutputStream;
 
-    public StreamGobbler(InputStream inputStream, LogOutputStream logOutputStream) {
+    public StreamGobbler(InputStream inputStream, CmdLocalLogger logOutputStream) {
         this.inputStream = inputStream;
         this.logOutputStream = logOutputStream;
     }

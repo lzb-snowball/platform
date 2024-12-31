@@ -16,8 +16,6 @@ import com.pro.snowball.api.SnowballConst;
 import com.pro.snowball.api.enums.EnumExecuteOrderState;
 import com.pro.snowball.api.model.db.*;
 import com.pro.snowball.common.dao.ExecuteOrderDao;
-import com.pro.snowball.common.service.cmd.CmdLocalServiceImpl;
-import com.pro.snowball.common.service.cmd.CmdRemoteServiceImpl;
 import com.pro.snowball.common.service.cmd.ICmdLocalService;
 import com.pro.snowball.common.service.cmd.ICmdRemoteService;
 import com.pro.snowball.common.util.Command;
@@ -116,8 +114,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                         Tuple2<String, String> filePathsError = FileUploadUtils.newFile(fileModel, now, null,
                                 orderNo + "_full" + ".log");
                         entity.setNo(orderNo);
-                        entity.setLogFileFull(filePathsFull.getT1());
-                        entity.setLogFileError(filePathsError.getT1());
+                        entity.setLogFileFull(FileUploadUtils.FILE_PREPEND + filePathsFull.getT1());
+                        entity.setLogFileError(FileUploadUtils.FILE_PREPEND + filePathsError.getT1());
                         entity.setLogFileFullInner(filePathsFull.getT2());
                         entity.setLogFileErrorInner(filePathsError.getT2());
                         entity.setState(EnumExecuteOrderState.DOING);
@@ -192,7 +190,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             List<ExecuteOrderStepCommand> orderStepCommandsSub = listMap.get(stepId);
             for (ExecuteOrderStepCommand command : orderStepCommandsSub) {
                 // 执行单行命令
-                boolean success = this.executeOrderCommand(command, logFileFull, logFileError);
+                boolean success = this.executeOrderCommand(entity, command, logFileFull, logFileError);
                 stepNo = command.getStepNo();
                 ExecuteOrder updateEntity = new ExecuteOrder();
                 updateEntity.setId(entity.getId());
@@ -211,12 +209,12 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         this.saveOrUpdate(updateEntity);
     }
 
-    private boolean executeOrderCommand(ExecuteOrderStepCommand orderCommand, String logFileFull, String logFileError) {
+    private boolean executeOrderCommand(ExecuteOrder order, ExecuteOrderStepCommand orderCommand, String logFileFull, String logFileError) {
         List<Command> commands = CommandParser.parseCommands(orderCommand.getContentAfter());
         for (Command command : commands) {
             log.info("执行命令-开始 {}", JSONUtil.toJsonStr(command));
             // 执行一行命令
-            boolean success = this.executeCommand(command, logFileFull, logFileError);
+            boolean success = this.executeCommand(order, command, logFileFull, logFileError);
             if (!success) {
                 log.warn("执行命令-异常 {}", JSONUtil.toJsonStr(command));
                 return false;
@@ -247,33 +245,34 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         return true;
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Command command = JSONUtil.toBean(
-                "{\"cmdType\":\"remote\",\"cmdContent\":\"cd /project/snowball/\\n                tar --no-xattr -xzf libs.tar.gz -C lib\",\"params\":{\"privateKeyLocalPath\":\"/Users/zubin/.ssh/id_rsa_github2\",\"code\":\"111.230.10.171\",\"port\":\"22\",\"name\":\"111.230.10.171服务器\",\"host\":\"111.230.10.171\",\"username\":\"root\"}}",
-                Command.class);
-        RemoteServer remoteServer = JSONUtil.toBean(command.getParams(), RemoteServer.class);
-        boolean execute = new CmdLocalServiceImpl().execute(
-                Collections.singletonList(command.getCmdContent()),
-                "/Users/zubin/IdeaProjects/snowball/.idea/info.log",
-                "/Users/zubin/IdeaProjects/snowball/.idea/error.log");
-        System.out.println("execute=" + execute);
-        Thread.sleep(2000);
-    }
+//    public static void main(String[] args) throws InterruptedException {
+//        Command command = JSONUtil.toBean(
+//                "{\"cmdType\":\"remote\",\"cmdContent\":\"cd /project/snowball/\\n                tar --no-xattr -xzf libs.tar.gz -C lib\",\"params\":{\"privateKeyLocalPath\":\"/Users/zubin/.ssh/id_rsa_github2\",\"code\":\"111.230.10.171\",\"port\":\"22\",\"name\":\"111.230.10.171服务器\",\"host\":\"111.230.10.171\",\"username\":\"root\"}}",
+//                Command.class);
+//        RemoteServer remoteServer = JSONUtil.toBean(command.getParams(), RemoteServer.class);
+//        boolean execute = new CmdLocalServiceImpl().execute(
+//                Collections.singletonList(command.getCmdContent()),
+//                "/Users/zubin/IdeaProjects/snowball/.idea/info.log",
+//                "/Users/zubin/IdeaProjects/snowball/.idea/error.log");
+//        System.out.println("execute=" + execute);
+//        Thread.sleep(2000);
+//    }
 
-    private boolean executeCommand(Command command, String logFileFull, String logFileError) {
+    private boolean executeCommand(ExecuteOrder order, Command command, String logFileFull, String logFileError) {
         String cmdContent = command.getCmdContent();
+        String logKey = "ExecuteOrder_" + order.getId().toString();
         //noinspection EnhancedSwitchMigration
         switch (command.getCmdType()) {
             case local:
                 // 本地 执行
                 return cmdLocalService.execute(Collections.singletonList(cmdContent),
                         logFileFull,
-                        logFileError);
+                        logFileError, logKey);
             case remote:
                 // 远程服务器 执行
                 RemoteServer remoteServer = JSONUtil.toBean(command.getParams(), RemoteServer.class);
                 return cmdRemoteService.execute(remoteServer, Collections.singletonList(cmdContent),
-                        logFileFull, logFileError);
+                        logFileFull, logFileError, logKey);
 
         }
         return false;

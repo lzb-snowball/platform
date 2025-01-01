@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public enum EnumMyExecuteTemplate implements  IEnumToDbEnum<MyExecuteTemplate> {
 
-    _1("分组1 更新-jar", 1L, 1L, "", 100, true, LocalDateTime.of(2024, 12, 31, 18, 57, 49, 0), null, null, 0, 0, null),
-    _2("分组1 更新-ui", 1L, 2L, "", 100, true, LocalDateTime.of(2024, 12, 28, 11, 5, 58, 0), null, null, 0, 0, null),
+    _1("分组1 更新-jar", 1L, 1L, "", 100, true, null, null, null, 0, 0, null),
+    _2("分组1 更新-ui", 1L, 2L, "", 100, true, null, null, null, 0, 0, null),
     _3("分组1 更新-jar-lib", 1L, 3L, "", 100, true, null, null, null, 0, 0, null);
 
     @ApiModelProperty(value = "名称")

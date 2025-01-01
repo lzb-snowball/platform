@@ -1,6 +1,6 @@
 package command;
 
-import com.pro.snowball.api.model.db.RemoteServer;
+import com.pro.snowball.api.model.vo.RemoteServer;
 
 import java.util.Map;
 

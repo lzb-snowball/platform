@@ -14,13 +14,11 @@ import java.nio.charset.StandardCharsets;
 public class CmdRemoteLogger extends LogOutputStream {
 
     private final BufferedWriter writer;
-    private final String filePath;
     private final String logKey;
     private final LoggerExtendService loggerService;
 
     public CmdRemoteLogger(String filePath, boolean append, LoggerExtendService loggerService, String logKey) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath, StandardCharsets.UTF_8, append);
-        this.filePath = filePath;
         this.logKey = logKey;
         this.writer = new BufferedWriter(fileWriter);
         this.loggerService = loggerService;

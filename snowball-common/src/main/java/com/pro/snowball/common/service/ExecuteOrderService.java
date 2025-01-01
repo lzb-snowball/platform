@@ -1,7 +1,6 @@
 package com.pro.snowball.common.service;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -19,6 +18,7 @@ import com.pro.framework.mybatisplus.BaseService;
 import com.pro.snowball.api.SnowballConst;
 import com.pro.snowball.api.enums.EnumExecuteOrderState;
 import com.pro.snowball.api.model.db.*;
+import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.dao.ExecuteOrderDao;
 import com.pro.snowball.common.service.cmd.ICmdLocalService;
 import com.pro.snowball.common.service.cmd.ICmdRemoteService;
@@ -28,7 +28,6 @@ import com.pro.snowball.common.util.TemplateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -373,7 +372,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                                 if (inputParamMapResult != null) {
                                     Set<String> inputParamSet = inputParamMapResult.keySet();
                                     for (String paramCode : paramCodeRequireds) {
-                                        AssertUtil.isTrue(inputParamSet.contains(paramCode), "_参数指定", paramCode);
+                                        AssertUtil.isTrue(inputParamSet.contains(paramCode), "_参数未指定", paramCode);
                                     }
                                     // 带参数解析xml内容
                                     log.info("解析 {} {} \n{}", step.getName(), inputParamMapResult, content);

@@ -4,10 +4,12 @@ import com.pro.common.modules.api.dependencies.message.ToSocket;
 import com.pro.common.modules.service.dependencies.modelauth.base.MessageService;
 import com.pro.snowball.api.SnowballConst;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class LoggerExtendService {
     MessageService messageService;
 
@@ -15,5 +17,6 @@ public class LoggerExtendService {
         ToSocket toSocket = ToSocket.toAllUser("", line);
         toSocket.setTopic(logKey);
         messageService.sendToManager(toSocket);
+        log.info(line);
     }
 }

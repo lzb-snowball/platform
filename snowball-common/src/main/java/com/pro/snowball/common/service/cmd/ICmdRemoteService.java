@@ -1,6 +1,6 @@
 package com.pro.snowball.common.service.cmd;
 
-import com.pro.snowball.api.model.db.RemoteServer;
+import com.pro.snowball.api.model.vo.RemoteServer;
 
 import java.util.List;
 

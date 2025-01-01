@@ -1,4 +1,4 @@
-package com.pro.snowball.api.model.db;
+package com.pro.snowball.api.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pro.common.modules.api.dependencies.model.BaseModel;

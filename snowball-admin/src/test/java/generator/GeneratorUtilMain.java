@@ -4,7 +4,6 @@ import com.pro.framework.generator.main.generator.main.GeneratorUtil_class_platf
 import com.pro.snowball.api.model.db.ExecuteParam;
 import com.pro.snowball.api.model.db.ExecuteParamField;
 import com.pro.snowball.api.model.db.ExecuteParamModel;
-import com.pro.snowball.api.model.db.Module;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,6 +1,6 @@
 package command;
 
-import com.pro.snowball.api.model.db.RemoteServer;
+import com.pro.snowball.api.model.vo.RemoteServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;

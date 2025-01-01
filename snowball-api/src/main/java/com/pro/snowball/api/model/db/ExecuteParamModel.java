@@ -2,6 +2,7 @@ package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
 import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
+import com.pro.framework.api.enums.IEnumToDbDbId;
 import com.pro.framework.javatodb.annotation.JTDTable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +13,7 @@ import lombok.Data;
 @JTDTable(entityId = 10014, module = "snowball", sequences = {
         "UNIQUE KEY `uk_code` (`code`)"
 })
-public class ExecuteParamModel extends BaseModel implements IConfigClass {
+public class ExecuteParamModel extends BaseModel implements IConfigClass, IEnumToDbDbId {
     @ApiModelProperty(value = "取值编号")
     private String code;
     @ApiModelProperty(value = "名称")

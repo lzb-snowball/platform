@@ -17,13 +17,10 @@ public class GeneratorUtil_class_platform_main extends GeneratorUtil_class_platf
                         ExecuteOrderStepCommand.class,
                         ExecuteStep.class,
                         ExecuteStepCommand.class,
-                        ExecuteStepParamRequired.class,
                         ExecuteTemplate.class,
                         ExecuteTemplateAndStep.class,
                         ExecuteGroup.class,
-                        MyExecuteTemplate.class,
-                        MyExecuteTemplateParam.class,
-                        RemoteServer.class
+                        MyExecuteTemplate.class
                 )
         );
     }

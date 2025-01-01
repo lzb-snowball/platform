@@ -2,6 +2,8 @@ package com.pro.snowball.api.model.db;
 
 import com.pro.common.modules.api.dependencies.model.BaseModel;
 import com.pro.common.modules.api.dependencies.model.classes.IConfigClass;
+import com.pro.framework.api.enums.IEnumToDbDb;
+import com.pro.framework.api.enums.IEnumToDbDbId;
 import com.pro.framework.javatodb.annotation.JTDField;
 import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.framework.javatodb.constant.JTDConst;
@@ -12,9 +14,9 @@ import lombok.Data;
 @Data
 @ApiModel(description = "参数可选值")
 @JTDTable(entityId = 10016, module = "snowball", sequences = {
-        "UNIQUE KEY `uk_modelCode_groupId_myTemplateId_templateId` (`model_code`,`group_id`,`my_template_id`,`template_id`)",
+        "UNIQUE KEY `uk_modelCode_groupId_myTemplateId` (`model_code`,`group_id`,`my_template_id`)",
 })
-public class ExecuteParam extends BaseModel implements IConfigClass {
+public class ExecuteParam extends BaseModel implements IConfigClass, IEnumToDbDbId {
     @ApiModelProperty(value = "我的我的分组")
     @JTDField(entityClass = ExecuteGroup.class, entityClassKey = "id", entityClassTargetProp = "id", notNull = JTDConst.EnumFieldNullType.can_null)
     private String groupId;

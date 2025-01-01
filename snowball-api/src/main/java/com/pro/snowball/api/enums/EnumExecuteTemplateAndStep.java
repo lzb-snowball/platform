@@ -20,7 +20,9 @@ public enum EnumExecuteTemplateAndStep implements  IEnumToDbEnum<ExecuteTemplate
     _3(      1L,   3L,  "",  10040,   true,    null ),
     _4(      3L,   1L,  "",  10010,   true,    null ),
     _5(      3L,   2L,  "",  10020,   true,    null ),
-    _6(      3L,   6L,  "",  10020,   true,    null );
+    _6(      3L,   6L,  "",  10020,   true,    null ),
+    _7(2L, 9L, "", 10110, true, null),
+    _8(2L, 11L, "", 10120, true, null);
 
     @ApiModelProperty(value = "模板配置")
     @JTDField(entityClass = ExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")

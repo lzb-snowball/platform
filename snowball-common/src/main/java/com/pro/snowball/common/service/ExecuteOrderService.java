@@ -1,6 +1,5 @@
 package com.pro.snowball.common.service;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -13,6 +12,7 @@ import com.pro.common.modules.service.dependencies.util.upload.FileUploadUtils;
 import com.pro.common.modules.service.dependencies.util.upload.UploadModuleModel;
 import com.pro.framework.api.structure.Tuple2;
 import com.pro.framework.api.util.AssertUtil;
+import com.pro.framework.api.util.BeanUtils;
 import com.pro.framework.api.util.CollUtils;
 import com.pro.framework.mybatisplus.BaseService;
 import com.pro.snowball.api.SnowballConst;
@@ -66,8 +66,9 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 //    @Transactional
     public boolean saveOrUpdate(ExecuteOrder entity) {
         String optType = entity.getOptType();
-        boolean isNew = entity.getId() == null;
-        ExecuteOrder orderOld = isNew ? null : this.getById(entity.getId());
+        Long orderId = entity.getId();
+        boolean isNew = orderId == null;
+
         //noinspection SwitchStatementWithTooFewBranches
         switch (optType) {
             // 修改状态
@@ -76,81 +77,14 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 switch (state) {
                     // 运行中 后台开始
                     case DOING -> {
-                        String orderNo = isNew ? IdUtil.simpleUUID() : entity.getNo();
-                        LocalDateTime now = LocalDateTime.now();
-                        Long myTemplateId = entity.getMyTemplateId();
-                        MyExecuteTemplate myTemplate = myExecuteTemplateService.getById(myTemplateId);
-                        AssertUtil.notEmpty(myTemplate, "我的模板Id不存在", myTemplateId);
-                        AssertUtil.isTrue(myTemplate.getEnabled(), "我的模板未开启", myTemplate.getName());
-
-                        Long templateId = myTemplate.getTemplateId();
-                        ExecuteTemplate template = executeTemplateService.getById(templateId);
-                        AssertUtil.notEmpty(template, "模板Id不存在", templateId);
-                        AssertUtil.isTrue(template.getEnabled(), "模板未开启", template.getName());
-
-                        // 加载指令
-                        List<ExecuteOrderStepCommand> orderStepCommands = this.loadCommands(templateId,
-                                entity.getInputParamMap(), myTemplate);
-                        entity.setTemplateId(templateId);
-                        entity.setStepNoAll((int) orderStepCommands.stream()
-                                .map(ExecuteOrderStepCommand::getStepId)
-                                .distinct()
-                                .count());
-
-                        // 旧订单,先前成功的步骤不执行了
-                        if (!isNew) {
-                            orderStepCommands = orderStepCommands.stream()
-                                    .filter(s -> s.getStepNo() >= orderOld.getStepNoCurrent())
-                                    .toList();
+                        ExecuteOrder order;
+                        if (isNew) {
+                            order = entity;
+                        } else {
+                            order = this.getById(orderId);
+                            BeanUtils.copyProperties(entity, order);
                         }
-                        // 创建工作空间
-                        UploadModuleModel workspaceFolder = commonProperties.getFiles()
-                                .getModules()
-                                .get(SnowballConst.Str.folder_snowballWorkspace);
-                        Tuple2<String, String> filePathsWorkspace = FileUploadUtils.newFolder(workspaceFolder, now,
-                                orderNo);
-
-
-                        // 创建日志文件
-                        UploadModuleModel fileModel = commonProperties.getFiles()
-                                .getModules()
-                                .get(SnowballConst.Str.folder_snowballLog);
-                        Tuple2<String, String> filePathsFull = FileUploadUtils.newFile(fileModel, now, null,
-                                orderNo + "_error" + ".log");
-                        Tuple2<String, String> filePathsError = FileUploadUtils.newFile(fileModel, now, null,
-                                orderNo + "_full" + ".log");
-                        entity.setNo(orderNo);
-                        entity.setLogFileFull(FileUploadUtils.FILE_PREPEND + filePathsFull.getT1());
-                        entity.setLogFileError(FileUploadUtils.FILE_PREPEND + filePathsError.getT1());
-                        entity.setLogFileFullInner(filePathsFull.getT2());
-                        entity.setLogFileErrorInner(filePathsError.getT2());
-                        entity.setState(EnumExecuteOrderState.DOING);
-                        super.saveOrUpdate(entity);
-                        Long orderId = entity.getId();
-                        for (ExecuteOrderStepCommand command : orderStepCommands) {
-                            command.setOrderId(orderId);
-                            command.setContentAfter(command.getContentAfter()
-                                    .replaceAll("@/", filePathsWorkspace.getT2()));
-                        }
-                        executeOrderStepCommandService.saveBatch(orderStepCommands);
-
-
-                        entity.setStateTime(now);
-
-                        myExecuteTemplateService.lambdaUpdate()
-                                .set(MyExecuteTemplate::getLastOrderState, entity.getState())
-                                .set(MyExecuteTemplate::getLastOrderStateTime, entity.getStateTime())
-                                .set(MyExecuteTemplate::getLastOrderId, entity.getId())
-                                .eq(MyExecuteTemplate::getId, myTemplateId)
-                                .update();
-
-
-                        // 新线程 执行命令
-                        List<ExecuteOrderStepCommand> finalOrderStepCommands = orderStepCommands;
-                        threadService.startThread(SnowballConst.Str.THREAD_HEAD + orderNo,
-                                () -> SpringContextUtils.getBean(getClass())
-                                        .executeOrderCommands(entity, finalOrderStepCommands));
-                        return true;
+                        this.startOrder(order, isNew, orderId);
                     }
                     // 运行成功 自动成功
                     case SUCCESS -> {
@@ -161,13 +95,12 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                     }
                     // 手动停止 手动停止
                     case STOP -> {
-                        Long orderId = entity.getId();
                         if (orderId == null) {
                             return false;
                         }
-                        if (threadService.isThreadRunning(SnowballConst.Str.THREAD_HEAD + orderOld.getNo())) {
+                        if (threadService.isThreadRunning(SnowballConst.Str.THREAD_HEAD + orderId)) {
                             // 结束线程
-                            threadService.stopThread(SnowballConst.Str.THREAD_HEAD + orderOld.getNo());
+                            threadService.stopThread(SnowballConst.Str.THREAD_HEAD + orderId);
                         }
                     }
                 }
@@ -178,7 +111,90 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         return super.saveOrUpdate(entity);
     }
 
-//    @Transactional
+    private void startOrder(ExecuteOrder order, boolean isNew, Long orderId) {
+//                        String orderNo = isNew ? IdUtil.simpleUUID() : entity.getNo();
+        LocalDateTime now = LocalDateTime.now();
+        Long myTemplateId = order.getMyTemplateId();
+        MyExecuteTemplate myTemplate = myExecuteTemplateService.getById(myTemplateId);
+        AssertUtil.notEmpty(myTemplate, "我的模板Id不存在", myTemplateId);
+        AssertUtil.isTrue(myTemplate.getEnabled(), "我的模板未开启", myTemplate.getName());
+
+        Long templateId = myTemplate.getTemplateId();
+        ExecuteTemplate template = executeTemplateService.getById(templateId);
+        AssertUtil.notEmpty(template, "模板Id不存在", templateId);
+        AssertUtil.isTrue(template.getEnabled(), "模板未开启", template.getName());
+
+        // 加载指令
+        List<ExecuteOrderStepCommand> orderStepCommands = this.loadCommands(templateId,
+                order.getInputParamMap(), myTemplate);
+        order.setTemplateId(templateId);
+        order.setStepNoAll((int) orderStepCommands.stream()
+                .map(ExecuteOrderStepCommand::getStepId)
+                .distinct()
+                .count());
+
+
+        // 旧订单,先前成功的步骤不执行了
+        if (isNew) {
+            order.setStepNoCurrent(1);
+            super.save(order);
+            orderId = order.getId();
+            myExecuteTemplateService.lambdaUpdate()
+                    .set(MyExecuteTemplate::getLastOrderId, orderId)
+                    .eq(MyExecuteTemplate::getId, myTemplateId).update();
+        } else {
+            orderStepCommands = orderStepCommands.stream()
+                    .filter(s -> s.getStepNo() >= order.getStepNoCurrent())
+                    .toList();
+        }
+        assert orderId != null;
+        String orderIdStr = orderId.toString();
+        String filePathsWorkspaceInner;
+        if (isNew) {
+            // 创建工作空间
+            UploadModuleModel workspaceFolder = commonProperties.getFiles()
+                    .getModules()
+                    .get(SnowballConst.Str.folder_snowballWorkspace);
+            Tuple2<String, String> filePathsWorkspace = FileUploadUtils.newFolder(workspaceFolder, now,
+                    orderIdStr);
+
+
+            // 创建日志文件
+            UploadModuleModel fileModel = commonProperties.getFiles()
+                    .getModules()
+                    .get(SnowballConst.Str.folder_snowballLog);
+            Tuple2<String, String> filePathsFull = FileUploadUtils.newFile(fileModel, now, null,
+                    orderId + "_full" + ".log", true);
+            Tuple2<String, String> filePathsError = FileUploadUtils.newFile(fileModel, now, null,
+                    orderIdStr + "_error" + ".log", true);
+            order.setLogFileFull(FileUploadUtils.FILE_PREPEND + filePathsFull.getT1());
+            order.setLogFileError(FileUploadUtils.FILE_PREPEND + filePathsError.getT1());
+            order.setLogFileFullInner(filePathsFull.getT2());
+            order.setLogFileErrorInner(filePathsError.getT2());
+            filePathsWorkspaceInner = filePathsWorkspace.getT2();
+            order.setFilePathsWorkspaceInner(filePathsWorkspaceInner);
+        } else {
+            filePathsWorkspaceInner = order.getLogFileErrorInner();
+        }
+        order.setState(EnumExecuteOrderState.DOING);
+        order.setStateTime(now);
+        for (ExecuteOrderStepCommand command : orderStepCommands) {
+            command.setOrderId(orderId);
+            command.setContentAfter(command.getContentAfter()
+                    .replaceAll("@/", filePathsWorkspaceInner));
+        }
+        executeOrderStepCommandService.saveBatch(orderStepCommands);
+
+        List<ExecuteOrderStepCommand> finalOrderStepCommands = orderStepCommands;
+
+        // 新线程
+        threadService.startThread(SnowballConst.Str.THREAD_HEAD + orderIdStr,
+                () -> SpringContextUtils.getBean(getClass())
+                        // 执行命令
+                        .executeOrderCommands(order, finalOrderStepCommands));
+    }
+
+    //    @Transactional
     public void executeOrderCommands(ExecuteOrder entity, List<ExecuteOrderStepCommand> orderStepCommands) {
         // 执行任务 记录日志文件
         String logFileFull = entity.getLogFileFullInner();
@@ -191,34 +207,34 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<Long> stepIds = listMap.keySet()
                 .stream()
                 .toList();
-        boolean successAll = true;
-        int stepNo;
-        step:
-        for (Long stepId : stepIds) {
+        Integer stepNo = null;
+
+        for (int i = 0; i < stepIds.size(); i++) {
+            Long stepId = stepIds.get(i);
             List<ExecuteOrderStepCommand> orderStepCommandsSub = listMap.get(stepId);
+            boolean successStep = true;
             for (ExecuteOrderStepCommand command : orderStepCommandsSub) {
+                stepNo = command.getStepNo();
                 // 执行单行命令
                 boolean success = this.executeOrderCommand(entity, command, logFileFull, logFileError);
-//                stepNo = ObjUtil.defaultIfNull(command.getStepNo(),1);
-                stepNo = command.getStepNo();
-                ExecuteOrder updateEntity = new ExecuteOrder();
-                updateEntity.setId(entity.getId());
-                updateEntity.setStepNoCurrent(stepNo);
-//                updateEntity.setUpdateTime(LocalDateTime.now());
-                super.saveOrUpdate(updateEntity);
-                messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
                 if (!success) {
-                    successAll = false;
+                    successStep = false;
                     // socket推送步骤更新
-                    break step;
+                    break;
                 }
             }
+            // 结束了
+            if (!successStep || i == (stepIds.size() - 1)) {
+                ExecuteOrder updateEntity = new ExecuteOrder();
+                updateEntity.setId(entity.getId());
+                updateEntity.setTemplateId(entity.getTemplateId());
+                updateEntity.setStepNoCurrent(stepNo);
+                updateEntity.setState(successStep ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
+                this.beforeUpdate(updateEntity);
+                super.saveOrUpdate(updateEntity);
+                messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
+            }
         }
-        ExecuteOrder updateEntity = new ExecuteOrder();
-        updateEntity.setId(entity.getId());
-        updateEntity.setState(successAll ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
-        super.saveOrUpdate(updateEntity);
-        messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
     }
 
     private boolean executeOrderCommand(ExecuteOrder order, ExecuteOrderStepCommand orderCommand, String logFileFull, String logFileError) {
@@ -412,9 +428,16 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
     private void beforeUpdate(ExecuteOrder entity) {
         LocalDateTime stateTime = entity.getStateTime();
         EnumExecuteOrderState state = entity.getState();
-        if (state != null || stateTime != null) {
+        Integer stepNoAll = entity.getStepNoAll();
+        Integer stepNoCurrent = entity.getStepNoCurrent();
+        if (state != null || stateTime != null || stepNoAll != null || stepNoCurrent != null) {
             List<MyExecuteTemplate> templates = myExecuteTemplateService.lambdaQuery()
-                    .eq(MyExecuteTemplate::getLastOrderId, entity.getId())
+                    .and(qw -> {
+                        qw.eq(null != entity.getId(), MyExecuteTemplate::getLastOrderId, entity.getId())
+                                .or()
+                                .eq(null != entity.getMyTemplateId(), MyExecuteTemplate::getId,
+                                        entity.getMyTemplateId());
+                    })
                     .list();
             for (MyExecuteTemplate template : templates) {
                 MyExecuteTemplate update = new MyExecuteTemplate();
@@ -422,6 +445,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 
                 update.setLastOrderStateTime(stateTime);
                 update.setLastOrderState(state);
+                update.setLastOrderStepNoAll(stepNoAll);
+                update.setLastOrderStepNoCurrent(stepNoCurrent);
                 myExecuteTemplateService.updateById(update);
                 messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.MyExecuteTemplate, update));
             }

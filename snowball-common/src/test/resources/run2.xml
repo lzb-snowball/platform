@@ -1,8 +1,0 @@
-<foreach collection="servers" item="server">
-    <foreach collection="modules" item="module">
-        <if test="module.code != 'libs'">
-            # 结束旧进程
-            pid=$(ps -ef | grep '/project/#{platform}/#{platform}-#{module.code}.jar' | grep -v grep | awk '{print $2}')
-        </if>
-    </foreach>
-</foreach>

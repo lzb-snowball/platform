@@ -1,5 +1,0 @@
-
-    <foreach collection="modules" item="module">
-        
-    
-</foreach>

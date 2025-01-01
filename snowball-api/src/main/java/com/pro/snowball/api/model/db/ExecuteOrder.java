@@ -18,9 +18,9 @@ import java.util.Map;
 @ApiModel(description = "执行订单")
 @JTDTable(entityId = 10012, module = "snowball")
 public class ExecuteOrder extends BaseModel implements IUserOrderClass {
-    @ApiModelProperty(value = "订单编号")
-    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
-    private String no;
+//    @ApiModelProperty(value = "订单编号")
+//    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
+//    private String no;
     @ApiModelProperty(value = "我的模板")
     @JTDField(entityClass = MyExecuteTemplate.class, entityClassKey = "id", entityClassTargetProp = "id")
     // 数据量太大了,暂时不做显性关联
@@ -43,7 +43,7 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private Integer stepNoAll;
     @ApiModelProperty(value = "当前第几步")
-    @JTDField(defaultValue = "1")
+    @JTDField(defaultValue = "1", uiType = JTDConst.EnumFieldUiType.hide)
     private Integer stepNoCurrent;
     @ApiModelProperty(value = "备注")
     private String remark;
@@ -52,7 +52,7 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     // 数据量太大了,暂时不做显性关联
     private Long adminId;
     @ApiModelProperty(value = "基础日志文件")
-    @JTDField(uiType = JTDConst.EnumFieldUiType.file, mainLength = 1024)
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
     private String logFileFull;
     @ApiModelProperty(value = "错误日志文件")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
@@ -63,6 +63,9 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     @ApiModelProperty(value = "错误日志文件全路径")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
     private String logFileErrorInner;
+    @ApiModelProperty(value = "工作空间全路径")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide, mainLength = 1024)
+    private String filePathsWorkspaceInner;
 
     @ApiModelProperty(value = "操作类型", notes = "base: 基础增删改 其他类型自定义")
     transient private String optType = "base";

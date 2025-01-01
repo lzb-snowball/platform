@@ -22,7 +22,7 @@ public enum EnumExecuteParam implements  IEnumToDbEnum<ExecuteParam> {
     _1("1", "", "platform", "snowball", null, null, 100, true, false, "snowball", null),
     _2("", "1", "repositories", "git@github.com:lzb-framework/framework.git\ngit@github.com:lzb-parent/parent.git\ngit@github.com:lzb-snowball/platform.git", null, null, 100, true, false, "git@github.com:lzb-framework/framework.git\ngit@github.com:lzb-parent/parent.git\ngit@github.com:lzb-snowball/platform.git", null),
     _4("", "3", "repositories", "git@github.com:lzb-framework/framework.git\ngit@github.com:lzb-parent/parent.git\ngit@github.com:lzb-snowball/platform.git", null, null, 100, true, false, "git@github.com:lzb-framework/framework.git\ngit@github.com:lzb-parent/parent.git\ngit@github.com:lzb-snowball/platform.git", null),
-    _5("", "2", "repositories", "git@github.com:lzb-snowball/ui-admin.git", null, null, 100, true, false, "", null),
+    _5("", "2", "repositories", "git@github.com:lzb-snowball/ui-admin.git", null, null, 100, true, false, "git@github.com:lzb-snowball/ui-admin.git", null),
     _6("", "2", "repositories_parent_ui", "git@github.com:lzb-parent/parent-ui.git", null, null, 100, true, false, "git@github.com:lzb-parent/parent-ui.git", null),
     _7("1", "", "modules", "[{\"code\":\"user\",\"name\":\"用户端\",\"javaEnv\":\"-Xms128m -Xmx1024m\"},{\"javaEnv\":\"-Xms128m -Xmx1024m\",\"code\":\"admin\",\"name\":\"管理端\"}]", "模块", "1", 100, true, true, "admin", null),
     _8("1", "", "servers", "[{\"name\":\"111.230.10.171服务器\",\"host\":\"111.230.10.171\",\"port\":\"22\",\"username\":\"root\",\"privateKeyLocalPath\":\"/Users/zubin/.ssh/id_rsa_github2\",\"code\":\"111.230.10.171\"}]", "服务器", "1", 100, true, true, "111.230.10.171", null),

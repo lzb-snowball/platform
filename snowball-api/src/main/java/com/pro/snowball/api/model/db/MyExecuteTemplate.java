@@ -39,6 +39,12 @@ public class MyExecuteTemplate extends BaseModel implements IConfigClass, IEnumT
     private EnumExecuteOrderState lastOrderState;
     @ApiModelProperty(value = "最后订单状态时间")
     private LocalDateTime lastOrderStateTime;
+    @ApiModelProperty(value = "总共几步")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
+    private Integer lastOrderStepNoAll;
+    @ApiModelProperty(value = "当前第几步")
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
+    private Integer lastOrderStepNoCurrent;
     @ApiModelProperty(value = "订单成功次数")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private Integer orderSuccessTimes;

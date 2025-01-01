@@ -25,6 +25,7 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
         // 遍历并执行命令
         for (String command : commands) {
             ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+            processBuilder.environment().put("PATH", System.getenv("PATH"));
             Process process = processBuilder.start();
 
             // 异步处理输出流和错误流

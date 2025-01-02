@@ -32,7 +32,7 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
             InputStream inputStream = process.getInputStream();
             InputStream errorStream = process.getErrorStream();
             CmdLocalLogger loggerInfo = new CmdLocalLogger(inputStream, infoLogFile, true, loggerService, logKey);
-            CmdLocalLogger loggerError = new CmdLocalLogger(errorStream, errorLogFile, true, loggerService, logKey);
+            CmdLocalLogger loggerError = new CmdLocalLogger(errorStream, infoLogFile, true, loggerService, logKey);
             // 输出 当前指令
             loggerInfo.writeLine(command);
 

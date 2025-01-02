@@ -83,6 +83,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                         } else {
                             order = this.getById(orderId);
                             BeanUtils.copyProperties(entity, order);
+                            order.setInputParamMap(entity.getInputParamMap());
                         }
                         this.startOrder(order, isNew, orderId);
                     }
@@ -157,7 +158,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                     .get(SnowballConst.Str.folder_snowballWorkspace);
             Tuple2<String, String> filePathsWorkspace = FileUploadUtils.newFolder(workspaceFolder, now,
                     orderIdStr);
-
+            filePathsWorkspaceInner = filePathsWorkspace.getT2();
+            order.setFilePathsWorkspaceInner(filePathsWorkspaceInner);
 
             // 创建日志文件
             UploadModuleModel fileModel = commonProperties.getFiles()
@@ -171,10 +173,9 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             order.setLogFileError(FileUploadUtils.FILE_PREPEND + filePathsError.getT1());
             order.setLogFileFullInner(filePathsFull.getT2());
             order.setLogFileErrorInner(filePathsError.getT2());
-            filePathsWorkspaceInner = filePathsWorkspace.getT2();
-            order.setFilePathsWorkspaceInner(filePathsWorkspaceInner);
+
         } else {
-            filePathsWorkspaceInner = order.getLogFileErrorInner();
+            filePathsWorkspaceInner = order.getFilePathsWorkspaceInner();
         }
         order.setState(EnumExecuteOrderState.DOING);
         order.setStateTime(now);
@@ -224,15 +225,18 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 }
             }
             // 结束了
+            ExecuteOrder updateEntity = new ExecuteOrder();
+            updateEntity.setId(entity.getId());
+            updateEntity.setTemplateId(entity.getTemplateId());
+            updateEntity.setStepNoCurrent(stepNo);
             if (!successStep || i == (stepIds.size() - 1)) {
-                ExecuteOrder updateEntity = new ExecuteOrder();
-                updateEntity.setId(entity.getId());
-                updateEntity.setTemplateId(entity.getTemplateId());
-                updateEntity.setStepNoCurrent(stepNo);
                 updateEntity.setState(successStep ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
-                this.beforeUpdate(updateEntity);
-                super.saveOrUpdate(updateEntity);
-                messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
+            }
+            this.beforeUpdate(updateEntity);
+            super.saveOrUpdate(updateEntity);
+            messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
+            if (!successStep) {
+                break;
             }
         }
     }

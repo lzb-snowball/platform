@@ -29,7 +29,7 @@ public class CmdLocalLogger implements Runnable {
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.contains("Building snowball-admin 2.0.0")) {
-                log.warn("===line {}", line);
+                log.warn("===line 1{}", line);
             }
             writeLine(line);
         }

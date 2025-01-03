@@ -19,7 +19,8 @@ public class CmdLocalLogger implements Runnable {
         this.logKey = logKey;
         this.loggerService = loggerService;
         reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, append), StandardCharsets.UTF_8));
+        writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(filePath, append), StandardCharsets.UTF_8));
     }
 
     @Override
@@ -27,6 +28,9 @@ public class CmdLocalLogger implements Runnable {
     public void run() {
         String line;
         while ((line = reader.readLine()) != null) {
+            if (line.contains("Building snowball-admin 2.0.0")) {
+                log.warn("===line {}", line);
+            }
             writeLine(line);
         }
     }

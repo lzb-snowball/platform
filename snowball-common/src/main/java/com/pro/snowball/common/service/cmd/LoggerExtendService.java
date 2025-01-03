@@ -14,6 +14,9 @@ public class LoggerExtendService {
     MessageService messageService;
 
     public void receiveLine(String logKey, String line) {
+        if (line.contains("Building snowball-admin 2.0.0")) {
+            log.warn("===line {}", line);
+        }
         ToSocket toSocket = ToSocket.toAllUser("", line);
         toSocket.setTopic(logKey);
         messageService.sendToManager(toSocket);

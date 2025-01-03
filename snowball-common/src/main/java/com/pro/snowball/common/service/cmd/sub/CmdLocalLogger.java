@@ -19,7 +19,7 @@ public class CmdLocalLogger implements Runnable {
         this.logKey = logKey;
         this.loggerService = loggerService;
         reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        writer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8, append));
+        writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, append), StandardCharsets.UTF_8));
     }
 
     @Override

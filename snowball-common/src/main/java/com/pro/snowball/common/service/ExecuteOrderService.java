@@ -213,7 +213,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<Long> stepIds = listMap.keySet()
                 .stream()
                 .toList();
-        Integer stepNo = 0;
+        Integer stepNo = 1;
 
         for (int i = 0; i < stepIds.size(); i++) {
             Long stepId = stepIds.get(i);
@@ -257,7 +257,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             } catch (Exception e) {
                 //noinspection ConstantValue
                 if (e instanceof InterruptedException) {
-                    log.warn("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
+                    log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
                     return false;
                 } else {
                     throw e;

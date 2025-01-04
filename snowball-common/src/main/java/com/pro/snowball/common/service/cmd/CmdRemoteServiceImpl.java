@@ -69,7 +69,8 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
     public void destroy(String orderKey) {
         Process process = processMap.get(orderKey);
         if (process != null) {
-            process.destroy();
+            processMap.remove(orderKey);
+            process.destroyForcibly();
         }
     }
 }

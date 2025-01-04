@@ -103,13 +103,13 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                         if (orderId == null) {
                             return false;
                         }
-//                        if (threadService.isThreadRunning(SnowballConst.Str.THREAD_HEAD + orderId)) {
-                        // 结束线程
-                        ExecuteOrder order;
-                        order = this.getById(orderId);
-                        cmdServices.forEach(service -> service.destroy(getOrderKey(order)));
-                        threadService.stopThread(SnowballConst.Str.THREAD_HEAD + orderId);
-//                        }
+                        if (threadService.isThreadRunning(SnowballConst.Str.THREAD_HEAD + orderId)) {
+                            // 结束线程
+                            ExecuteOrder order;
+                            order = this.getById(orderId);
+                            cmdServices.forEach(service -> service.destroy(getOrderKey(order)));
+                            threadService.stopThread(SnowballConst.Str.THREAD_HEAD + orderId);
+                        }
                     }
                 }
                 entity.setStateTime(LocalDateTime.now());
@@ -261,7 +261,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 if (e instanceof InterruptedException) {
                     log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
                     return false;
-                } else if (e instanceof ExecuteException && !CmdRemoteServiceImpl.processMap.containsKey(getOrderKey(order))) {
+                } else if (e instanceof ExecuteException && !CmdRemoteServiceImpl.processMap.containsKey(
+                        getOrderKey(order))) {
                     log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
                     return false;
                 } else {

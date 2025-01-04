@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +42,10 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     private LocalDateTime stateTime;
     @ApiModelProperty(value = "总共几步")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
-    private Integer stepNoAll;
+    private BigDecimal stepNoAll;
     @ApiModelProperty(value = "已完成第几步")
     @JTDField(defaultValue = "1", uiType = JTDConst.EnumFieldUiType.hide)
-    private Integer stepNoCurrent;
+    private BigDecimal stepNoCurrent;
     @ApiModelProperty(value = "备注")
     private String remark;
     @ApiModelProperty(value = "管理员Id")

@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -41,10 +42,10 @@ public class MyExecuteTemplate extends BaseModel implements IConfigClass, IEnumT
     private LocalDateTime lastOrderStateTime;
     @ApiModelProperty(value = "总共几步")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
-    private Integer lastOrderStepNoAll;
+    private BigDecimal lastOrderStepNoAll;
     @ApiModelProperty(value = "已完成第几步")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
-    private Integer lastOrderStepNoCurrent;
+    private BigDecimal lastOrderStepNoCurrent;
     @ApiModelProperty(value = "订单成功次数")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private Integer orderSuccessTimes;

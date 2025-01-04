@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @ApiModel(description = "步骤配置")
 @JTDTable(entityId = 10009, module = "snowball")
@@ -21,5 +23,5 @@ public class ExecuteStep extends BaseModel implements IConfigClass, IEnumToDbDbI
     @ApiModelProperty(value = "开关")
     private Boolean enabled;
     @ApiModelProperty(value = "排序")
-    transient private Integer no;
+    transient private BigDecimal no;
 }

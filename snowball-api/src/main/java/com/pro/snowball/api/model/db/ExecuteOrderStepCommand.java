@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class ExecuteOrderStepCommand extends BaseModel implements IUserRecordCla
     @ApiModelProperty(value = "步骤排序")
     private Integer stepSort;
     @ApiModelProperty(value = "步骤序号1到n")
-    private Integer stepNo;
+    private BigDecimal stepNo;
     @ApiModelProperty(value = "解析前执行内容")
     @JTDField(type = JTDConst.EnumFieldType.text, uiType = JTDConst.EnumFieldUiType.xml)
     private String content;

@@ -1,5 +1,6 @@
 package com.pro.snowball.common.service;
 
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.ExecuteException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,6 +47,7 @@ import java.util.stream.IntStream;
 @Slf4j
 public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrder> {
 
+    public static final BigDecimal STEP_NO_INIT = new BigDecimal("0.5");
     MessageService messageService;
     ThreadService threadService;
     CommonProperties commonProperties;
@@ -136,23 +139,26 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<ExecuteOrderStepCommand> orderStepCommands = this.loadCommands(templateId,
                 order.getInputParamMap(), myTemplate);
         order.setTemplateId(templateId);
-        order.setStepNoAll((int) orderStepCommands.stream()
+        order.setStepNoAll(new BigDecimal(orderStepCommands.stream()
                 .map(ExecuteOrderStepCommand::getStepId)
                 .distinct()
-                .count());
+                .count()));
 
 
         // 旧订单,先前成功的步骤不执行了
         if (isNew) {
-            order.setStepNoCurrent(0);
+            order.setStepNoCurrent(STEP_NO_INIT);
             super.save(order);
             orderId = order.getId();
             myExecuteTemplateService.lambdaUpdate()
                     .set(MyExecuteTemplate::getLastOrderId, orderId)
                     .eq(MyExecuteTemplate::getId, myTemplateId).update();
         } else {
+            if (order.getStepNoCurrent().compareTo(BigDecimal.ONE) == 0) {
+                order.setStepNoCurrent(STEP_NO_INIT);
+            }
             orderStepCommands = orderStepCommands.stream()
-                    .filter(s -> s.getStepNo() > order.getStepNoCurrent())
+                    .filter(s -> s.getStepNo().compareTo(order.getStepNoCurrent()) > 0)
                     .toList();
         }
         assert orderId != null;
@@ -215,7 +221,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<Long> stepIds = listMap.keySet()
                 .stream()
                 .toList();
-        Integer stepNo = 0;
+        BigDecimal stepNo = entity.getStepNoCurrent();
 
         for (int i = 0; i < stepIds.size(); i++) {
             Long stepId = stepIds.get(i);
@@ -235,7 +241,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             ExecuteOrder updateEntity = new ExecuteOrder();
             updateEntity.setId(entity.getId());
             updateEntity.setTemplateId(entity.getTemplateId());
-            updateEntity.setStepNoCurrent(successStep ? stepNo : (stepNo - 1));
+            updateEntity.setStepNoCurrent(
+                    successStep ? stepNo : NumberUtil.min(stepNo.subtract(BigDecimal.ONE), BigDecimal.ZERO));
             if (!successStep || i == (stepIds.size() - 1)) {
                 updateEntity.setState(successStep ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
             }
@@ -339,7 +346,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 .toList();
         int no = 1;
         for (ExecuteStep step : steps) {
-            step.setNo(no);
+            step.setNo(new BigDecimal(no));
             no++;
         }
 
@@ -438,8 +445,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
     private void beforeUpdate(ExecuteOrder entity) {
         LocalDateTime stateTime = entity.getStateTime();
         EnumExecuteOrderState state = entity.getState();
-        Integer stepNoAll = entity.getStepNoAll();
-        Integer stepNoCurrent = entity.getStepNoCurrent();
+        BigDecimal stepNoAll = entity.getStepNoAll();
+        BigDecimal stepNoCurrent = entity.getStepNoCurrent();
         if (state != null || stateTime != null || stepNoAll != null || stepNoCurrent != null) {
             List<MyExecuteTemplate> templates = myExecuteTemplateService.lambdaQuery()
                     .and(qw -> {

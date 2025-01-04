@@ -49,6 +49,9 @@ public class ThreadService {
         if (future == null) {
             throw new IllegalArgumentException("No thread found with id " + threadId);
         }
+        // 获取线程对象并强制中断
+        Thread thread = (Thread) future;
+        thread.interrupt();
         future.cancel(true);
         // 尝试取消任务
 //        AssertUtil.isTrue(,"Thread with id " + threadId + " is cancelled.");

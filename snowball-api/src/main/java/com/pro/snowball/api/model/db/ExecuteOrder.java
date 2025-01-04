@@ -44,7 +44,7 @@ public class ExecuteOrder extends BaseModel implements IUserOrderClass {
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private BigDecimal stepNoAll;
     @ApiModelProperty(value = "已完成第几步")
-    @JTDField(defaultValue = "1", uiType = JTDConst.EnumFieldUiType.hide)
+    @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private BigDecimal stepNoCurrent;
     @ApiModelProperty(value = "备注")
     private String remark;

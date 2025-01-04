@@ -47,7 +47,10 @@ import java.util.stream.IntStream;
 @Slf4j
 public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrder> {
 
-    public static final BigDecimal STEP_NO_INIT = new BigDecimal("0.5");
+    /**
+     * 正在进行中的步骤默认加0.1
+     */
+    public static final BigDecimal STEP_NO_DOING = new BigDecimal("0.1");
     MessageService messageService;
     ThreadService threadService;
     CommonProperties commonProperties;
@@ -147,18 +150,15 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 
         // 旧订单,先前成功的步骤不执行了
         if (isNew) {
-            order.setStepNoCurrent(STEP_NO_INIT);
+            order.setStepNoCurrent(BigDecimal.ZERO);
             super.save(order);
             orderId = order.getId();
             myExecuteTemplateService.lambdaUpdate()
                     .set(MyExecuteTemplate::getLastOrderId, orderId)
                     .eq(MyExecuteTemplate::getId, myTemplateId).update();
         } else {
-            if (order.getStepNoCurrent().compareTo(BigDecimal.ONE) == 0) {
-                order.setStepNoCurrent(STEP_NO_INIT);
-            }
             orderStepCommands = orderStepCommands.stream()
-                    .filter(s -> s.getStepNo().compareTo(order.getStepNoCurrent()) > 0)
+                    .filter(s -> s.getStepNo().compareTo(order.getStepNoCurrent()) >= 0)
                     .toList();
         }
         assert orderId != null;
@@ -221,12 +221,21 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<Long> stepIds = listMap.keySet()
                 .stream()
                 .toList();
-        BigDecimal stepNo = entity.getStepNoCurrent();
+        BigDecimal stepNo;
 
         for (int i = 0; i < stepIds.size(); i++) {
             Long stepId = stepIds.get(i);
             List<ExecuteOrderStepCommand> orderStepCommandsSub = listMap.get(stepId);
+            stepNo = orderStepCommandsSub.get(0).getStepNo();
             boolean successStep = true;
+            // 结束了
+            ExecuteOrder updateEntity = new ExecuteOrder();
+            updateEntity.setId(entity.getId());
+            updateEntity.setTemplateId(entity.getTemplateId());
+            // 1-0.9=0.1=10% 表示刚开始
+            updateEntity.setStepNoCurrent(stepNo.subtract(BigDecimal.ONE).add(STEP_NO_DOING));
+            this.updateOrder(updateEntity);
+
             for (ExecuteOrderStepCommand command : orderStepCommandsSub) {
                 stepNo = command.getStepNo();
                 // 执行单行命令
@@ -238,21 +247,23 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 }
             }
             // 结束了
-            ExecuteOrder updateEntity = new ExecuteOrder();
-            updateEntity.setId(entity.getId());
-            updateEntity.setTemplateId(entity.getTemplateId());
-            updateEntity.setStepNoCurrent(
-                    successStep ? stepNo : NumberUtil.min(stepNo.subtract(BigDecimal.ONE), BigDecimal.ZERO));
+            if (successStep) {
+                updateEntity.setStepNoCurrent(stepNo);
+            }
             if (!successStep || i == (stepIds.size() - 1)) {
                 updateEntity.setState(successStep ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
             }
-            this.beforeUpdate(updateEntity);
-            super.saveOrUpdate(updateEntity);
-            messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
+            updateOrder(updateEntity);
             if (!successStep) {
                 break;
             }
         }
+    }
+
+    private void updateOrder(ExecuteOrder updateEntity) {
+        this.beforeUpdate(updateEntity);
+        super.saveOrUpdate(updateEntity);
+        messageService.sendToManager(ToSocket.toAllUser(SnowballConst.EntityClass.ExecuteOrder, updateEntity));
     }
 
     private boolean executeOrderCommand(ExecuteOrder order, ExecuteOrderStepCommand orderCommand, String logFileFull, String logFileError) {
@@ -449,12 +460,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         BigDecimal stepNoCurrent = entity.getStepNoCurrent();
         if (state != null || stateTime != null || stepNoAll != null || stepNoCurrent != null) {
             List<MyExecuteTemplate> templates = myExecuteTemplateService.lambdaQuery()
-                    .and(qw -> {
-                        qw.eq(null != entity.getId(), MyExecuteTemplate::getLastOrderId, entity.getId())
-                                .or()
-                                .eq(null != entity.getMyTemplateId(), MyExecuteTemplate::getId,
-                                        entity.getMyTemplateId());
-                    })
+                    .eq(MyExecuteTemplate::getLastOrderId, entity.getId())
                     .list();
             for (MyExecuteTemplate template : templates) {
                 MyExecuteTemplate update = new MyExecuteTemplate();

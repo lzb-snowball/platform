@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 public class LoggerExtendService {
     MessageService messageService;
 
-    public void receiveLine(String logKey, String line) {
+    public void receiveLine(String orderKey, String line) {
         ToSocket toSocket = ToSocket.toAllUser("", line);
-        toSocket.setTopic(logKey);
+        toSocket.setTopic(orderKey);
         messageService.sendToManager(toSocket);
         log.info(line);
     }

@@ -14,12 +14,12 @@ import java.nio.charset.StandardCharsets;
 public class CmdRemoteLogger extends LogOutputStream {
 
     private final BufferedWriter writer;
-    private final String logKey;
+    private final String orderKey;
     private final LoggerExtendService loggerService;
 
-    public CmdRemoteLogger(String filePath, boolean append, LoggerExtendService loggerService, String logKey) throws IOException {
+    public CmdRemoteLogger(String filePath, boolean append, LoggerExtendService loggerService, String orderKey) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath, StandardCharsets.UTF_8, append);
-        this.logKey = logKey;
+        this.orderKey = orderKey;
         this.writer = new BufferedWriter(fileWriter);
         this.loggerService = loggerService;
     }
@@ -29,7 +29,7 @@ public class CmdRemoteLogger extends LogOutputStream {
     public void processLine(String line, int level) {
         writer.write(line);
         // 统一的输出逻辑
-        loggerService.receiveLine(logKey, line);
+        loggerService.receiveLine(orderKey, line);
         writer.newLine();
         writer.flush();
     }

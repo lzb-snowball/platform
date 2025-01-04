@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 @Service
 @AllArgsConstructor
@@ -45,13 +46,13 @@ public class ThreadService {
 
     // 关闭一个线程
     public void stopThread(String threadId) {
-        Future<?> future = threadMap.get(threadId);
+        FutureTask<?> future = (FutureTask<?>) threadMap.get(threadId);
         if (future == null) {
             throw new IllegalArgumentException("No thread found with id " + threadId);
         }
         // 获取线程对象并强制中断
-        Thread thread = (Thread) future;
-        thread.interrupt();
+//        Thread thread = new Thread(future);
+//        thread.interrupt();
         future.cancel(true);
         // 尝试取消任务
 //        AssertUtil.isTrue(,"Thread with id " + threadId + " is cancelled.");

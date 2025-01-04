@@ -22,6 +22,7 @@ import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.dao.ExecuteOrderDao;
 import com.pro.snowball.common.service.cmd.ICmdLocalService;
 import com.pro.snowball.common.service.cmd.ICmdRemoteService;
+import com.pro.snowball.common.service.cmd.ICmdService;
 import com.pro.snowball.common.util.Command;
 import com.pro.snowball.common.util.CommandParser;
 import com.pro.snowball.common.util.TemplateUtil;
@@ -55,6 +56,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
     ExecuteParamService executeParamService;
     ICmdLocalService cmdLocalService;
     ICmdRemoteService cmdRemoteService;
+    List<ICmdService> cmdServices;
 
     public List<ExecuteOrder> getActiveList(ExecuteOrder executeOrder) {
         return this.lambdaQuery()
@@ -99,10 +101,13 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                         if (orderId == null) {
                             return false;
                         }
-                        if (threadService.isThreadRunning(SnowballConst.Str.THREAD_HEAD + orderId)) {
-                            // 结束线程
-                            threadService.stopThread(SnowballConst.Str.THREAD_HEAD + orderId);
-                        }
+//                        if (threadService.isThreadRunning(SnowballConst.Str.THREAD_HEAD + orderId)) {
+                        // 结束线程
+                        ExecuteOrder order;
+                        order = this.getById(orderId);
+                        cmdServices.forEach(service -> service.destroy(getOrderKey(order)));
+                        threadService.stopThread(SnowballConst.Str.THREAD_HEAD + orderId);
+//                        }
                     }
                 }
                 entity.setStateTime(LocalDateTime.now());
@@ -208,7 +213,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<Long> stepIds = listMap.keySet()
                 .stream()
                 .toList();
-        Integer stepNo = null;
+        Integer stepNo = 0;
 
         for (int i = 0; i < stepIds.size(); i++) {
             Long stepId = stepIds.get(i);
@@ -228,7 +233,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             ExecuteOrder updateEntity = new ExecuteOrder();
             updateEntity.setId(entity.getId());
             updateEntity.setTemplateId(entity.getTemplateId());
-            updateEntity.setStepNoCurrent(stepNo);
+            updateEntity.setStepNoCurrent(successStep ? stepNo : (stepNo - 1));
             if (!successStep || i == (stepIds.size() - 1)) {
                 updateEntity.setState(successStep ? EnumExecuteOrderState.SUCCESS : EnumExecuteOrderState.FAIL);
             }
@@ -246,7 +251,18 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         for (Command command : commands) {
             log.info("执行命令-开始 {}", JSONUtil.toJsonStr(command));
             // 执行一行命令
-            boolean success = this.executeCommand(order, command, logFileFull, logFileError);
+            boolean success = false;
+            try {
+                success = this.executeCommand(order, command, logFileFull, logFileError);
+            } catch (Exception e) {
+                //noinspection ConstantValue
+                if (e instanceof InterruptedException) {
+                    log.warn("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
+                    return false;
+                } else {
+                    throw e;
+                }
+            }
             if (!success) {
                 log.warn("执行命令-异常 {}", JSONUtil.toJsonStr(command));
                 return false;
@@ -292,22 +308,26 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 
     private boolean executeCommand(ExecuteOrder order, Command command, String logFileFull, String logFileError) {
         String cmdContent = command.getCmdContent();
-        String logKey = "ExecuteOrder_" + order.getId().toString();
+        String orderKey = getOrderKey(order);
         //noinspection EnhancedSwitchMigration
         switch (command.getCmdType()) {
             case local:
                 // 本地 执行
                 return cmdLocalService.execute(Collections.singletonList(cmdContent),
                         logFileFull,
-                        logFileError, logKey);
+                        logFileError, orderKey);
             case remote:
                 // 远程服务器 执行
                 RemoteServer remoteServer = JSONUtil.toBean(command.getParams(), RemoteServer.class);
                 return cmdRemoteService.execute(remoteServer, Collections.singletonList(cmdContent),
-                        logFileFull, logFileError, logKey);
+                        logFileFull, logFileError, orderKey);
 
         }
         return false;
+    }
+
+    private static String getOrderKey(ExecuteOrder order) {
+        return "ExecuteOrder_" + order.getId().toString();
     }
 
     public List<ExecuteOrderStepCommand> loadCommands(Long templateId, Map<String, Object> inputParamMap, MyExecuteTemplate myTemplate) {

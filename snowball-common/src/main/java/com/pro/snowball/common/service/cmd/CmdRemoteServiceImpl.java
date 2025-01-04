@@ -1,5 +1,7 @@
 package com.pro.snowball.common.service.cmd;
 
+import cn.hutool.core.map.WeakConcurrentMap;
+import cn.hutool.json.JSONUtil;
 import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.service.cmd.sub.CmdRemoteLogger;
 import lombok.Cleanup;
@@ -11,18 +13,22 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
 public class CmdRemoteServiceImpl implements ICmdRemoteService {
     @Autowired
     private LoggerExtendService loggerService;
+    private static final Map<String, Process> processMap = new WeakConcurrentMap<>();
 
     @Override
-    public boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile, String logKey) {
+    public boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile, String orderKey) {
         for (String command : commands) {
-            boolean success = executeCommand(remoteServer, command, infoLogFile, errorLogFile, logKey);
+            boolean success = executeCommand(remoteServer, command, infoLogFile, errorLogFile, orderKey);
             if (!success) {
                 return false;
             }
@@ -31,10 +37,10 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
     }
 
     @SneakyThrows
-    private boolean executeCommand(RemoteServer remoteServer, String command, String infoLogFile, String errorLogFile, String logKey) {
+    private boolean executeCommand(RemoteServer remoteServer, String command, String infoLogFile, String errorLogFile, String orderKey) {
         DefaultExecutor executor = new DefaultExecutor();
-        @Cleanup CmdRemoteLogger infoStream = new CmdRemoteLogger(infoLogFile, true, loggerService, logKey);
-        @Cleanup CmdRemoteLogger errorStream = new CmdRemoteLogger(errorLogFile, true, loggerService, logKey);
+        @Cleanup CmdRemoteLogger infoStream = new CmdRemoteLogger(infoLogFile, true, loggerService, orderKey);
+        @Cleanup CmdRemoteLogger errorStream = new CmdRemoteLogger(errorLogFile, true, loggerService, orderKey);
         // 输出 当前指令
         infoStream.processLine(command, 0);
 
@@ -57,6 +63,14 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
         cmdLine.addArgument(remoteServer.getUsername() + "@" + remoteServer.getHost());
         cmdLine.addArgument(command, false); // Pass command to bash without escaping
         return cmdLine;
+    }
+
+    @Override
+    public void destroy(String orderKey) {
+        Process process = processMap.get(orderKey);
+        if (process != null) {
+            process.destroy();
+        }
     }
 }
 

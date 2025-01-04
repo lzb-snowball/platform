@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CmdRemoteServiceImpl implements ICmdRemoteService {
     @Autowired
     private LoggerExtendService loggerService;
-    private static final Map<String, Process> processMap = new WeakConcurrentMap<>();
+    public static final Map<String, Process> processMap = new WeakConcurrentMap<>();
 
     @Override
     public boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile, String orderKey) {
@@ -46,14 +46,9 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
 
         PumpStreamHandler streamHandler = new PumpStreamHandler(infoStream, errorStream);
         executor.setStreamHandler(streamHandler);
-        try {
-            CommandLine cmdLine = buildCommandLine(remoteServer, command);
-            int exitCode = executor.execute(cmdLine);
-            return exitCode == 0;
-        } catch (Exception e) {
-            log.error("Error executing command on {}", remoteServer.getHost(), e);
-            return false;
-        }
+        CommandLine cmdLine = buildCommandLine(remoteServer, command);
+        int exitCode = executor.execute(cmdLine);
+        return exitCode == 0;
     }
 
     private CommandLine buildCommandLine(RemoteServer remoteServer, String command) {

@@ -20,6 +20,7 @@ import com.pro.snowball.api.enums.EnumExecuteOrderState;
 import com.pro.snowball.api.model.db.*;
 import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.dao.ExecuteOrderDao;
+import com.pro.snowball.common.service.cmd.CmdRemoteServiceImpl;
 import com.pro.snowball.common.service.cmd.ICmdLocalService;
 import com.pro.snowball.common.service.cmd.ICmdRemoteService;
 import com.pro.snowball.common.service.cmd.ICmdService;
@@ -28,6 +29,7 @@ import com.pro.snowball.common.util.CommandParser;
 import com.pro.snowball.common.util.TemplateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.exec.ExecuteException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -142,7 +144,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 
         // 旧订单,先前成功的步骤不执行了
         if (isNew) {
-            order.setStepNoCurrent(1);
+            order.setStepNoCurrent(0);
             super.save(order);
             orderId = order.getId();
             myExecuteTemplateService.lambdaUpdate()
@@ -150,7 +152,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                     .eq(MyExecuteTemplate::getId, myTemplateId).update();
         } else {
             orderStepCommands = orderStepCommands.stream()
-                    .filter(s -> s.getStepNo() >= order.getStepNoCurrent())
+                    .filter(s -> s.getStepNo() > order.getStepNoCurrent())
                     .toList();
         }
         assert orderId != null;
@@ -213,7 +215,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         List<Long> stepIds = listMap.keySet()
                 .stream()
                 .toList();
-        Integer stepNo = 1;
+        Integer stepNo = 0;
 
         for (int i = 0; i < stepIds.size(); i++) {
             Long stepId = stepIds.get(i);
@@ -259,6 +261,9 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 if (e instanceof InterruptedException) {
                     log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
                     return false;
+                } else if (e instanceof ExecuteException && !CmdRemoteServiceImpl.processMap.containsKey(getOrderKey(order))) {
+                    log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
+                    return false;
                 } else {
                     throw e;
                 }
@@ -270,26 +275,6 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 log.info("执行命令-结束 {}", JSONUtil.toJsonStr(command));
             }
         }
-//        if (orderCommand.getRemoteServerFlag()) {
-//            AssertUtil.isTrue(orderCommand.getContentParamRequireds()
-//                    .indexOf(Str.PARAM_MODEL_CODE_SERVERS) == 0, "服务器配置必须放在第一行");
-//            Map<String, Object> inputParamMapResult = orderCommand.getInputParamMapResult();
-//            //noinspection unchecked
-//            List<JSONObject> servers = (List<JSONObject>) inputParamMapResult.get(Str.PARAM_MODEL_CODE_SERVERS);
-//            AssertUtil.notEmpty(servers, "服务器未配置", Str.PARAM_MODEL_CODE_SERVERS);
-//            List<RemoteServer> remoteServers = servers.stream()
-//                    .map(s -> s.toBean(RemoteServer.class))
-//                    .toList();
-//            remoteServers.forEach(remoteServer -> {
-//                // 远程服务器 执行
-//                cmdRemoteService.execute(remoteServer, Collections.singletonList(orderCommand.getContentAfter()),
-//                        logFileFull, logFileError);
-//            });
-//        } else {
-//            // 本地 执行
-//            cmdLocalService.execute(Collections.singletonList(orderCommand.getContentAfter()), logFileFull,
-//                    logFileError);
-//        }
         return true;
     }
 

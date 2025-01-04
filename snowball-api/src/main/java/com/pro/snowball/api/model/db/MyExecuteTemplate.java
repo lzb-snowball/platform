@@ -42,7 +42,7 @@ public class MyExecuteTemplate extends BaseModel implements IConfigClass, IEnumT
     @ApiModelProperty(value = "总共几步")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private Integer lastOrderStepNoAll;
-    @ApiModelProperty(value = "当前第几步")
+    @ApiModelProperty(value = "已完成第几步")
     @JTDField(uiType = JTDConst.EnumFieldUiType.hide)
     private Integer lastOrderStepNoCurrent;
     @ApiModelProperty(value = "订单成功次数")

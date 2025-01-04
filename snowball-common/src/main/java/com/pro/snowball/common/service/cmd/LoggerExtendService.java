@@ -14,9 +14,6 @@ public class LoggerExtendService {
     MessageService messageService;
 
     public void receiveLine(String logKey, String line) {
-        if (line.contains("snowball-admin")) {
-            log.warn("===line 2{}", line);
-        }
         ToSocket toSocket = ToSocket.toAllUser("", line);
         toSocket.setTopic(logKey);
         messageService.sendToManager(toSocket);

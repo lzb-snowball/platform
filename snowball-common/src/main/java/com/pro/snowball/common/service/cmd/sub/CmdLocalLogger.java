@@ -28,9 +28,6 @@ public class CmdLocalLogger implements Runnable {
     public void run() {
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.contains("snowball-admin")) {
-                log.warn("===line 1{}", line);
-            }
             writeLine(line);
         }
     }

@@ -11,10 +11,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EnumExecuteParamModel implements  IEnumToDbEnum<ExecuteParamModel> {
 
-    _1("modules", "模块", "", 100, true, true, true, false, null),
-    _2("servers", "服务器", "", 100, true, true, true, false, null),
-    _3("repositories", "仓库地址", "", 100, true, false, true, false, null),
-    _4("platform", "平台", "", 100, true, false, false, false, null),
+    _1("modules", "模块", "", 100, true, true, true, true, null),
+    _2("servers", "服务器", "", 100, true, true, true, true, null),
+    _3("repositories", "仓库地址", "", 100, true, false, true, true, null),
+    _4("platform", "平台", "", 100, true, false, false, true, null),
     _5("repositories_parent_ui", "parent-ui仓库地址", "", 100, true, false, true, false, null);
 
     @ApiModelProperty(value = "取值编号")

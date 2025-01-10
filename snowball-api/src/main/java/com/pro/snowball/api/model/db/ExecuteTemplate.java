@@ -14,7 +14,7 @@ import lombok.Data;
 public class ExecuteTemplate extends BaseModel implements IConfigClass, IEnumToDbDbId {
     @ApiModelProperty(value = "名称")
     private String name;
-    @ApiModelProperty(value = "推荐排序")
+    @ApiModelProperty(value = "排序")
     private Integer sort;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;

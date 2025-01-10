@@ -24,7 +24,7 @@ public class ExecuteTemplateAndStep extends IdModel implements IConfigClass, IEn
     private Long stepId;
     @ApiModelProperty(value = "备注")
     private String remark;
-    @ApiModelProperty(value = "推荐")
+    @ApiModelProperty(value = "排序")
     private Integer sort;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;

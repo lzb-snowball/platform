@@ -16,15 +16,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EnumExecuteParamField implements  IEnumToDbEnum<ExecuteParamField> {
 
-    _1("modules", "code", "编号", "", 100, true, false, null),
-    _2("modules", "name", "名称", "", 100, true, false, null),
-    _3("modules", "javaEnv", "java环境信息", "", 100, true, false, null),
-    _4("servers", "name", "名称", "", 100, true, false, null),
-    _5("servers", "host", "地址", "", 100, true, false, null),
-    _6("servers", "port", "端口", "", 100, true, false, null),
-    _7("servers", "username", "用户名", "", 100, true, false, null),
-    _8("servers", "privateKeyLocalPath", "私钥存储地址", "", 100, true, false, null),
-    _9("servers", "privateKeyPassword", "私钥存储访问密码", "", 100, true, false, null);
+    _1("modules", "code", "编号", "", 100, true, true, null),
+    _2("modules", "name", "名称", "", 100, true, true, null),
+    _3("modules", "javaEnv", "java环境信息", "", 100, true, true, null),
+    _4("servers", "name", "名称", "", 100, true, true, null),
+    _5("servers", "host", "地址", "", 100, true, true, null),
+    _6("servers", "port", "端口", "", 100, true, true, null),
+    _7("servers", "username", "用户名", "", 100, true, true, null),
+    _8("servers", "privateKeyLocalPath", "私钥存储地址", "", 100, true, true, null),
+    _9("servers", "privateKeyPassword", "私钥存储访问密码", "", 100, true, true, null);
 
     @ApiModelProperty(value = "参数模型")
     @JTDField(entityClass = ExecuteParamModel.class)

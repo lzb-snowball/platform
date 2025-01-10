@@ -26,7 +26,7 @@ public enum EnumExecuteStep implements  IEnumToDbEnum<ExecuteStep> {
     private String name;
     @ApiModelProperty(value = "备注")
     private String remark;
-    @ApiModelProperty(value = "推荐排序")
+    @ApiModelProperty(value = "排序")
     private Integer sort;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;

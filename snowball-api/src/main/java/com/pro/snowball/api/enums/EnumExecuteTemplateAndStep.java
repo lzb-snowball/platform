@@ -35,7 +35,7 @@ public enum EnumExecuteTemplateAndStep implements  IEnumToDbEnum<ExecuteTemplate
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "推荐")
+    @ApiModelProperty(value = "排序")
     private Integer sort;
 
     @ApiModelProperty(value = "开关")

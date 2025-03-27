@@ -2,7 +2,6 @@ package com.pro.snowball.common.service.cmd;
 
 import com.pro.common.modules.api.dependencies.message.ToSocket;
 import com.pro.common.modules.service.dependencies.modelauth.base.MessageService;
-import com.pro.snowball.api.SnowballConst;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -3,6 +3,7 @@ package com.pro.snowball.common.service.cmd;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.json.JSONUtil;
 import com.pro.snowball.common.service.cmd.sub.CmdLocalLogger;
+import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
+@Data
 public class CmdLocalServiceImpl implements ICmdLocalService {
     @Autowired
     private LoggerExtendService loggerService;

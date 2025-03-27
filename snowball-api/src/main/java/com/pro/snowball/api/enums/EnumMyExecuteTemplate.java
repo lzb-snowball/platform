@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public enum EnumMyExecuteTemplate implements  IEnumToDbEnum<MyExecuteTemplate> {
+public enum EnumMyExecuteTemplate implements IEnumToDbEnum<MyExecuteTemplate> {
 
     _1("分组1 更新-jar", 1L, 1L, "", 100, true, null, null, null, 0, 0, null),
     _2("分组1 更新-ui", 1L, 2L, "", 100, true, null, null, null, 0, 0, null),

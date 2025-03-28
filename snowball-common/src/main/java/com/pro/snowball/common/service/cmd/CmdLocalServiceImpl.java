@@ -31,8 +31,10 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
     public boolean execute(List<String> commands, String infoLogFile, String errorLogFile, String orderKey) {
         // 遍历并执行命令
         for (String command : commands) {
-            ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+            ProcessBuilder processBuilder = new ProcessBuilder( "bash", "-c", command);
             processBuilder.environment().put("PATH", System.getenv("PATH"));
+//            processBuilder.environment().put("LANG", "zh_CN.UTF-8");
+//            processBuilder.environment().put("LC_ALL", "zh_CN.UTF-8"); // 强制使用 UTF-8
             Process process = processBuilder.start();
             processMap.put(orderKey, process);
             // 异步处理输出流和错误流

@@ -20,9 +20,9 @@ public class MainApp {
             }
         });
         // 设定命令
-        String command = "cd /Users/zubin/IdeaProjects/snowball/ui-admin && npm run 'build prod'";
-        String infoLogFile = "/Users/zubin/IdeaProjects/snowball/ui-admin/build-info.log";
-        String errorLogFile = "/Users/zubin/IdeaProjects/snowball/ui-admin/build-error.log";
+        String command = "cd C:\\Users\\Public\\file\\snowball_workspace\\22\\";
+        String infoLogFile = "C:\\Users\\Public\\file\\build-info.log";
+        String errorLogFile = "C:\\Users\\Public\\file\\build-error.log";
         String orderKey = "build-ui-admin";
 
         // 执行命令

@@ -1,11 +1,10 @@
-import com.pro.common.modules.service.dependencies.modelauth.base.MessageService;
 import com.pro.snowball.common.service.cmd.CmdLocalServiceImpl;
 import com.pro.snowball.common.service.cmd.LoggerExtendService;
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import java.util.Collections;
 
-public class MainApp {
+public class MainAppWindows {
     @SneakyThrows
     public static void main(String[] args) {
         // 创建 Spring 上下文
@@ -20,7 +19,7 @@ public class MainApp {
             }
         });
         // 设定命令
-        String command = "cd C:\\Users\\Public\\file\\snowball_workspace\\22\\";
+        String command = "cd C:\\Users\\Public\\file\\snowball_workspace\\22\\;echo 'cd next'";
         String infoLogFile = "C:\\Users\\Public\\file\\build-info.log";
         String errorLogFile = "C:\\Users\\Public\\file\\build-error.log";
         String orderKey = "build-ui-admin";

@@ -30,4 +30,6 @@ public class ExecuteParamField extends BaseModel implements IConfigClass, IEnumT
     private Boolean enabled;
     @ApiModelProperty(value = "系统固有")
     private Boolean systemFlag;
+    @ApiModelProperty(value = "必填")
+    private Boolean required;
 }

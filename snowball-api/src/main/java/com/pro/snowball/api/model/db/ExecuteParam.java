@@ -7,6 +7,7 @@ import com.pro.framework.api.enums.IEnumToDbDbId;
 import com.pro.framework.javatodb.annotation.JTDField;
 import com.pro.framework.javatodb.annotation.JTDTable;
 import com.pro.framework.javatodb.constant.JTDConst;
+import com.pro.snowball.api.enums.EnumEditType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -46,8 +47,8 @@ public class ExecuteParam extends BaseModel implements IConfigClass, IEnumToDbDb
     private Integer sort;
     @ApiModelProperty(value = "开关")
     private Boolean enabled;
-    @ApiModelProperty(value = "执行前必须编辑")
-    private Boolean executeEdit;
+    @ApiModelProperty(value = "是否要编辑")
+    private EnumEditType executeEditType;
     @ApiModelProperty(value = "默认值", notes = "取字符串 或者 值选项的编号")
     @JTDField(notNull = JTDConst.EnumFieldNullType.can_null, mainLength = 2048)
     private String defaultValue;

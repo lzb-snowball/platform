@@ -49,7 +49,7 @@ public class ExecuteParam extends BaseModel implements IConfigClass, IEnumToDbDb
     private Boolean enabled;
     @ApiModelProperty(value = "是否要编辑")
     private EnumEditType executeEditType;
-    @ApiModelProperty(value = "默认值", notes = "取字符串 或者 值选项的编号")
+    @ApiModelProperty(value = "默认值", notes = "取字符串 或者 值选项的编号,多个值换行符分隔")
     @JTDField(notNull = JTDConst.EnumFieldNullType.can_null, mainLength = 2048)
     private String defaultValue;
 }

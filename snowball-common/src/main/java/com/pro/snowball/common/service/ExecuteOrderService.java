@@ -15,6 +15,7 @@ import com.pro.framework.api.structure.Tuple2;
 import com.pro.framework.api.util.AssertUtil;
 import com.pro.framework.api.util.BeanUtils;
 import com.pro.framework.api.util.CollUtils;
+import com.pro.framework.api.util.StrUtils;
 import com.pro.framework.mybatisplus.BaseService;
 import com.pro.snowball.api.SnowballConst;
 import com.pro.snowball.api.enums.EnumExecuteOrderState;
@@ -380,22 +381,31 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
             models.forEach(model -> {
                 String modelCode = model.getCode();
                 Object value = inputParamMapResult.get(modelCode);
-                if (model.getMultipleField()) {
-                    // code 转 对象 参数转成对象 List<JSONObject>
-                    //noinspection unchecked
-                    List<JSONObject> values = ((List<String>) value).stream()
-                            .map(val -> paramValueMap.get(modelCode)
-                                    .get(val))
-                            .toList();
-                    inputParamMapResult.put(modelCode, values);
-                } else {
-                    if (value instanceof String && model.getMultipleValue()) {
+                List<String> valueCodes = Collections.emptyList();
+                List<Object> valueObjects = new ArrayList<>();
+                // 多选中值
+                if (model.getMultipleValue()) {
+                    if (value instanceof String) {
                         // 多值切割处理
-                        List<String> values = Arrays.stream(((String) value).split("\n"))
-                                .toList();
-                        inputParamMapResult.put(modelCode, values);
+                        valueCodes = Arrays.stream(((String) value).split("\n")).filter(StrUtils::isNotBlank).toList();
+                    } else if (value instanceof Collection) {
+                        valueCodes = ((Collection<?>) value).stream().map(Object::toString).filter(StrUtils::isNotBlank).toList();
                     }
                 }
+                // 单选中值
+                else {
+                    valueCodes = Collections.singletonList(value.toString());
+                }
+                // 多属性(对象)
+                if (model.getMultipleField()) {
+                    // code 转 对象 参数转成对象 List<JSONObject>
+                    for (String valueCode : valueCodes) {
+                        valueObjects.add(paramValueMap.get(modelCode).get(valueCode));
+                    }
+                } else {
+                    valueObjects.addAll(valueCodes);
+                }
+                inputParamMapResult.put(modelCode, model.getMultipleValue() ? valueObjects : (valueObjects.isEmpty() ? null : valueObjects.get(0)));
             });
         } else {
             inputParamMapResult = null;

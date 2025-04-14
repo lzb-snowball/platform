@@ -50,31 +50,32 @@ public class TemplateUtil {
 
 
     public static List<String> extractRootVariables(String templateContent) {
-        // 定义正则表达式匹配 FreeMarker 根变量及其子变量
-        String regex = "<#list\\s+(\\w+)\\s+as\\s+(\\w+)>|\\$\\{(\\w+)\\}";
+        // 正则匹配 <#list ... as ...> 或 ${...}，${...} 允许带 .
+        String regex = "<#list\\s+(\\w+)\\s+as\\s+(\\w+)>|\\$\\{([\\w\\.]+)}";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(templateContent);
 
-        // 使用 Set 存储去重的根变量
-        Set<String> rootVariables = new LinkedHashSet<>(); // 保证顺序
-
-        // 使用 Set 记录子变量，避免重复添加
+        Set<String> rootVariables = new LinkedHashSet<>();
         Set<String> excludedVariables = new HashSet<>();
 
-        // 提取变量
         while (matcher.find()) {
             if (matcher.group(1) != null) {
-                rootVariables.add(matcher.group(1)); // 匹配 <#list ... as ...> 中的根变量
-                excludedVariables.add(matcher.group(2)); // 匹配 as 后的子变量
+                rootVariables.add(matcher.group(1));
+                excludedVariables.add(matcher.group(2));
             }
-            if (matcher.group(3) != null && !excludedVariables.contains(matcher.group(3))) {
-                rootVariables.add(matcher.group(3)); // 匹配 ${...}，排除子变量
+            if (matcher.group(3) != null) {
+                // 获取 ${...} 中的变量，例如 platform.code -> platform
+                String fullVar = matcher.group(3);
+                String rootVar = fullVar.contains(".") ? fullVar.substring(0, fullVar.indexOf(".")) : fullVar;
+                if (!excludedVariables.contains(rootVar)) {
+                    rootVariables.add(rootVar);
+                }
             }
         }
 
-        // 返回去重后的变量列表
         return new ArrayList<>(rootVariables);
     }
+
 
     public static void main(String[] args) {
         // 示例模板内容
@@ -83,27 +84,27 @@ public class TemplateUtil {
                   <#list modules as module>
                     <#if module.code != "libs">
                       # 结束旧进程
-                      pid=$(ps -ef | grep '/project/${platform}/${platform}-${module.code}.jar' | grep -v grep | awk '{print $2}')
+                      pid=$(ps -ef | grep '${platform.deployRoot}/${platform.code}-${module.code}.jar' | grep -v grep | awk '{print $2}')
                       if [ -n "$pid" ]; then
                       kill -9 $pid
                       echo "Previous process stopped."
                       fi
                       s
                       # 备份旧的 JAR 文件和日志文件
-                      BACKUP_DIR="/project/${platform}/backup/$(date +%Y%m%d%H%M%S)"
+                      BACKUP_DIR="${platform.deployRoot}/backup/$(date +%Y%m%d%H%M%S)"
                       mkdir -p "$BACKUP_DIR"
-                      cp /project/${platform}/${platform}-${module.code}.jar "$BACKUP_DIR/${platform}-${module.code}.jar"
-                      cp /project/${platform}/${module.code}.log "$BACKUP_DIR/${module.code}.log"
+                      cp ${platform.deployRoot}/${platform.code}-${module.code}.jar "$BACKUP_DIR/${platform.code}-${module.code}.jar"
+                      cp ${platform.deployRoot}/${module.code}.log "$BACKUP_DIR/${module.code}.log"
                       echo "Backup completed to $BACKUP_DIR."
                       s
                       # 启动新进程
                       export LC_ALL=en_US.UTF-8
-                      cd /project/${platform}/
-                      nohup java ${module.javaEnv} -Dloader.path=/project/${platform}/lib -jar -Dfile.encoding=UTF-8 -Dspring.profiles.active=prod,platform /project/${platform}/${platform}-${module.code}.jar > /project/${platform}/${module.code}.log 2>&1 & disown
+                      cd ${platform.deployRoot}/
+                      nohup java ${module.javaEnv} -Dloader.path=${platform.deployRoot}/lib -jar -Dfile.encoding=UTF-8 -Dspring.profiles.active=prod,platform ${platform.deployRoot}/${platform.code}-${module.code}.jar > ${platform.deployRoot}/${module.code}.log 2>&1 & disown
                       exit 0
                       s
                       # 检查启动成功
-                      tail -f /project/${platform}/${module.code}.log | while read line; do
+                      tail -f ${platform.deployRoot}/${module.code}.log | while read line; do
                       echo "$line"
                       if [[ "$line" == *"Started"* ]]; then
                       echo "Application started successfully!"

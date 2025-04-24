@@ -1,5 +1,6 @@
 package com.pro.snowball.common.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.ExecuteException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -190,6 +192,9 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
 
         } else {
             filePathsWorkspaceInner = order.getFilePathsWorkspaceInner();
+            // 清空日志 避免日志污染
+            FileUtil.writeUtf8String("", new File(order.getLogFileFullInner()));
+            FileUtil.writeUtf8String("", new File(order.getLogFileErrorInner()));
         }
         order.setState(EnumExecuteOrderState.DOING);
         order.setStateTime(now);

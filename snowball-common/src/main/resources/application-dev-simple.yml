@@ -1,0 +1,11 @@
+spring:
+  datasource:
+#    url: jdbc:mysql://111.230.10.171:3306/snowball?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#    username: root
+#    password: 'xuETfGvBRoKlFSuNdtBb540IqNmZPfPhDQ8n2W1x2koeMZJtqJXQkiG4JLL6C'
+    url: jdbc:mysql://localhost:3306/snowball?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: developer
+logging:
+  level:
+    com.pro.snowball.common.dao: DEBUG

@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 
 import java.util.Collections;
 
-public class MainAppMac {
+public class CmdLocalTestMac {
     @SneakyThrows
     public static void main(String[] args) {
         // 创建 Spring 上下文

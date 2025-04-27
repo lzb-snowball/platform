@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.service.cmd.sub.CmdRemoteLogger;
 import lombok.Cleanup;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
+@Setter
 public class CmdRemoteServiceImpl implements ICmdRemoteService {
     @Autowired
     private LoggerExtendService loggerService;
@@ -56,6 +58,10 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
         cmdLine.addArgument("-i");
         cmdLine.addArgument(remoteServer.getPrivateKeyLocalPath());
         cmdLine.addArgument(remoteServer.getUsername() + "@" + remoteServer.getHost());
+        String wrapped = String.format("bash -l -c \"%s\"", command.replace("\"","\\\""));
+// 或者
+//        String wrapped = String.format("bash -ic \"%s\"", command.replace("\"","\\\""));
+        cmdLine.addArgument(wrapped, false);
         cmdLine.addArgument(command, false); // Pass command to bash without escaping
 //        cmdLine.addArgument("bash -l -c '" + command + "'", false);
         return cmdLine;

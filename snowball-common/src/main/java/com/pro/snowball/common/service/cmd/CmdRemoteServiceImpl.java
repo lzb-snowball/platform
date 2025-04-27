@@ -58,11 +58,11 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
         cmdLine.addArgument("-i");
         cmdLine.addArgument(remoteServer.getPrivateKeyLocalPath());
         cmdLine.addArgument(remoteServer.getUsername() + "@" + remoteServer.getHost());
-        String wrapped = String.format("bash -l -c \"%s\"", command.replace("\"","\\\""));
+//        String wrapped = String.format("bash -l -c \"%s\"", command.replace("\"","\\\""));
 // 或者
 //        String wrapped = String.format("bash -ic \"%s\"", command.replace("\"","\\\""));
-        cmdLine.addArgument(wrapped, false);
-//        cmdLine.addArgument(command, false); // Pass command to bash without escaping
+//        cmdLine.addArgument(wrapped, false);
+        cmdLine.addArgument(command, false); // Pass command to bash without escaping
 //        cmdLine.addArgument("bash -l -c '" + command + "'", false);
         return cmdLine;
     }

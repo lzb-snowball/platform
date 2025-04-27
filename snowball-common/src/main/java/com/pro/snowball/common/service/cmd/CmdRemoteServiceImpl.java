@@ -62,7 +62,7 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
 // 或者
 //        String wrapped = String.format("bash -ic \"%s\"", command.replace("\"","\\\""));
         cmdLine.addArgument(wrapped, false);
-        cmdLine.addArgument(command, false); // Pass command to bash without escaping
+//        cmdLine.addArgument(command, false); // Pass command to bash without escaping
 //        cmdLine.addArgument("bash -l -c '" + command + "'", false);
         return cmdLine;
     }

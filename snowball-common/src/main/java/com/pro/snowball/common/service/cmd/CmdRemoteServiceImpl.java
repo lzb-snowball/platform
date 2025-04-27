@@ -60,6 +60,7 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
      * @return
      * 常见异常
      *  1.如果读不到 java.则是 需要在 source /etc/environment 这里配置 JAVA_HOME 和 PATH
+     *  2.秘钥权文件的权限太公开 chmod 600 /root/.ssh/id_rsa_baoyi_prod
      */
     private CommandLine buildCommandLine(RemoteServer remoteServer, String command) {
         CommandLine cmdLine = new CommandLine("/usr/bin/ssh");

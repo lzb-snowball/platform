@@ -1,7 +1,6 @@
 package com.pro.snowball.common.service.cmd;
 
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.json.JSONUtil;
 import com.pro.snowball.common.service.cmd.sub.CmdLocalLogger;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -9,11 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,7 +22,7 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
     @Autowired
     private LoggerExtendService loggerService;
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
-    private static final Map<String, Process> processMap = new WeakConcurrentMap<>();
+    public static final Map<String, List<Process>> processMap = new WeakConcurrentMap<>();
 
     @Override
     @SneakyThrows
@@ -34,7 +32,7 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
             ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
             processBuilder.environment().put("PATH", System.getenv("PATH"));
             Process process = processBuilder.start();
-            processMap.put(orderKey, process);
+            processMap.getOrDefault(orderKey, new ArrayList<>()).add(process);
             // 异步处理输出流和错误流
             InputStream inputStream = process.getInputStream();
             InputStream errorStream = process.getErrorStream();
@@ -48,6 +46,7 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
 
             // 等待命令完成
             int exitCode = process.waitFor();
+            process.destroy(); // 主动销毁
             if (exitCode != 0) {
                 return false;
             }
@@ -57,10 +56,12 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
 
     @Override
     public void destroy(String orderKey) {
-        Process process = processMap.get(orderKey);
-        if (process != null) {
-            processMap.remove(orderKey);
-            process.destroyForcibly();
+        List<Process> processes = processMap.get(orderKey);
+        if (processes != null) {
+            processes.forEach(process -> {
+                processMap.remove(orderKey);
+                process.destroyForcibly();
+            });
         }
     }
 }

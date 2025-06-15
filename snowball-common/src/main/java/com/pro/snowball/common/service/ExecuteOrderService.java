@@ -23,10 +23,7 @@ import com.pro.snowball.api.enums.EnumExecuteOrderState;
 import com.pro.snowball.api.model.db.*;
 import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.dao.ExecuteOrderDao;
-import com.pro.snowball.common.service.cmd.CmdRemoteServiceImpl;
-import com.pro.snowball.common.service.cmd.ICmdLocalService;
-import com.pro.snowball.common.service.cmd.ICmdRemoteService;
-import com.pro.snowball.common.service.cmd.ICmdService;
+import com.pro.snowball.common.service.cmd.*;
 import com.pro.snowball.common.util.Command;
 import com.pro.snowball.common.util.CommandParser;
 import com.pro.snowball.common.util.TemplateUtil;
@@ -285,7 +282,7 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                 if (e instanceof InterruptedException) {
                     log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
                     return false;
-                } else if (e instanceof ExecuteException && !CmdRemoteServiceImpl.processMap.containsKey(
+                } else if (e instanceof ExecuteException && !CmdLocalServiceImpl.processMap.containsKey(
                         getOrderKey(order))) {
                     log.info("执行命令-手动终止 {}", JSONUtil.toJsonStr(command));
                     return false;

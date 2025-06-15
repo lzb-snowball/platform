@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class CmdRemoteLogger extends LogOutputStream {
+    private int lineCount = 0;
+    private static final int FLUSH_THRESHOLD = 20; // 每 20 行 flush 一次
 
     private final BufferedWriter writer;
     private final String orderKey;
@@ -29,8 +31,19 @@ public class CmdRemoteLogger extends LogOutputStream {
     public void processLine(String line, int level) {
         writer.write(line);
         // 统一的输出逻辑
-        loggerService.receiveLine(orderKey, line);
         writer.newLine();
+        loggerService.receiveLine(orderKey, line);
+        lineCount++;
+        if (lineCount >= FLUSH_THRESHOLD) {
+            writer.flush();
+            lineCount = 0;
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        super.close();
         writer.flush();
+        writer.close();
     }
 }

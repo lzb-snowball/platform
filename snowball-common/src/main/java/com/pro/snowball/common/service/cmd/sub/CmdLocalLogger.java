@@ -11,6 +11,9 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class CmdLocalLogger implements Runnable {
+    private int lineCount = 0;
+    private static final int FLUSH_THRESHOLD = 20; // 每 20 行 flush 一次
+
     private final String orderKey;
     private final LoggerExtendService loggerService;
     private final BufferedReader reader;
@@ -48,6 +51,10 @@ public class CmdLocalLogger implements Runnable {
         writer.write(line);
         loggerService.receiveLine(orderKey, line);
         writer.newLine();
-        writer.flush();
+        lineCount++;
+        if (lineCount >= FLUSH_THRESHOLD) {
+            writer.flush();
+            lineCount = 0;
+        }
     }
 }

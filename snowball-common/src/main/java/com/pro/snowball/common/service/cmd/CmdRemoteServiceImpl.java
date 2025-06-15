@@ -1,7 +1,5 @@
 package com.pro.snowball.common.service.cmd;
 
-import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.json.JSONUtil;
 import com.pro.snowball.api.model.vo.RemoteServer;
 import com.pro.snowball.common.service.cmd.sub.CmdRemoteLogger;
 import lombok.Cleanup;
@@ -14,10 +12,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
@@ -25,7 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CmdRemoteServiceImpl implements ICmdRemoteService {
     @Autowired
     private LoggerExtendService loggerService;
-    public static final Map<String, Process> processMap = new WeakConcurrentMap<>();
+//    @Autowired
+//    private ThreadService threadService;
+//    public static final Map<String, Process> processMap = new WeakConcurrentMap<>();
 
     @Override
     public boolean execute(RemoteServer remoteServer, List<String> commands, String infoLogFile, String errorLogFile, String orderKey) {
@@ -76,14 +73,9 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
         return cmdLine;
     }
 
-
     @Override
     public void destroy(String orderKey) {
-        Process process = processMap.get(orderKey);
-        if (process != null) {
-            processMap.remove(orderKey);
-            process.destroyForcibly();
-        }
+
     }
 }
 

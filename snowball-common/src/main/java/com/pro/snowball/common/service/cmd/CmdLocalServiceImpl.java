@@ -47,7 +47,7 @@ public class CmdLocalServiceImpl implements ICmdLocalService {
             executorService.execute(loggerError);
 
             // ✅ 等待进程结束，加超时限制
-            boolean finished = process.waitFor(15, TimeUnit.MINUTES);
+            boolean finished = process.waitFor(30, TimeUnit.MINUTES);
             if (!finished) {
                 log.warn("进程超时未结束，强制终止: {}", command);
                 process.descendants().forEach(p -> {

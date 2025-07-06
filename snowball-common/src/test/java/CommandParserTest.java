@@ -1,15 +1,35 @@
-package com.pro.snowball.common.util;
-
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import lombok.Data;
+import com.pro.snowball.common.util.Command;
+import com.pro.snowball.common.util.CommandParser;
+import com.pro.snowball.common.util.EnumCommandType;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class CommandParser {
+public class CommandParserTest {
 
+    public static void main(String[] args) {
+        String content = """
+            scp -i ${server.privateKeyLocalPath} @/platform/${platform}-${module.content}/target/${platform}-${module.content}.jar ${server.username}@${server.host}:/project/${platform}/new/${platform}-${module.content}.jar
 
+            <remote server="{\"name\":\"server1\",\"ip\":\"192.168.1.1\",\"port\":22}">
+                # Remote command here
+            </remote>
+
+            some-local-command --key=value
+            
+              <remote server="{\"name\":\"server1\",\"ip\":\"192.168.1.1\",\"port\":22}">
+                        # Remote command here
+                    </remote>
+                
+        """;
+
+        List<Command> commandSummary = CommandParser.parseCommands(content);
+        System.out.println(JSONUtil.toJsonPrettyStr(commandSummary));
+    }
 
     public static List<Command> parseCommands(String content) {
         List<Command> commands = new ArrayList<>();

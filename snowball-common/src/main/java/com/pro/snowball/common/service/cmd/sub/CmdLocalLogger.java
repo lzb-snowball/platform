@@ -32,19 +32,26 @@ public class CmdLocalLogger implements Runnable {
     @SneakyThrows
     public void run() {
         String line;
-        while ((line = getLine()) != null) {
-            writeLine(line);
+        try {
+            while ((line = getLine()) != null) {
+                writeLine(line);
+            }
+        } catch (IOException e) {
+            log.info("日志结束: {}", e.getMessage());
+        } finally {
+            try {
+                reader.close();
+                writer.close();
+            } catch (IOException e) {
+                log.warn("关闭流失败", e);
+            }
         }
     }
 
-    private String getLine() {
-        try {
-            return reader.readLine();
-        } catch (IOException e) {
-//            throw new RuntimeException(e);
-            return StrUtils.EMPTY;
-        }
+    private String getLine() throws IOException {
+        return reader.readLine(); // IOException 会由调用方处理
     }
+
 
     @SneakyThrows
     public void writeLine(String line) {

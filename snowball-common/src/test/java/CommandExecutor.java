@@ -1,7 +1,4 @@
-package com.pro.snowball.common.service.cmd;
-
 import java.io.*;
-import java.util.*;
 
 public class CommandExecutor {
     public static void main(String[] args) throws IOException, InterruptedException {

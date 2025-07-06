@@ -300,19 +300,6 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
         return true;
     }
 
-//    public static void main(String[] args) throws InterruptedException {
-//        Command command = JSONUtil.toBean(
-//                "{\"cmdType\":\"remote\",\"cmdContent\":\"cd /project/snowball/\\n                tar --no-xattr -xzf libs.tar.gz -C lib\",\"params\":{\"privateKeyLocalPath\":\"/Users/zubin/.ssh/id_rsa_github2\",\"code\":\"111.230.10.171\",\"port\":\"22\",\"name\":\"111.230.10.171服务器\",\"host\":\"111.230.10.171\",\"username\":\"root\"}}",
-//                Command.class);
-//        RemoteServer remoteServer = JSONUtil.toBean(command.getParams(), RemoteServer.class);
-//        boolean execute = new CmdLocalServiceImpl().execute(
-//                Collections.singletonList(command.getCmdContent()),
-//                "/Users/zubin/IdeaProjects/snowball/.idea/info.log",
-//                "/Users/zubin/IdeaProjects/snowball/.idea/error.log");
-//        System.out.println("execute=" + execute);
-//        Thread.sleep(2000);
-//    }
-
     private boolean executeCommand(ExecuteOrder order, Command command, String logFileFull, String logFileError) {
         String cmdContent = command.getCmdContent();
         String orderKey = getOrderKey(order);
@@ -431,8 +418,8 @@ public class ExecuteOrderService extends BaseService<ExecuteOrderDao, ExecuteOrd
                                         AssertUtil.isTrue(inputParamSet.contains(paramCode), "_参数未指定", paramCode);
                                     }
                                     // 带参数解析xml内容
-                                    log.info("解析 {} {} \n{}", step.getName(), inputParamMapResult, content);
                                     contentAfter = TemplateUtil.analysis(content, inputParamMapResult);
+                                    log.info("解析 {} {} \n{} \n\n {}", step.getName(), JSONUtil.toJsonStr(inputParamMapResult), content, contentAfter);
                                 }
                                 //noinspection UnnecessaryLocalVariable
                                 ExecuteOrderStepCommand build = ExecuteOrderStepCommand.builder()

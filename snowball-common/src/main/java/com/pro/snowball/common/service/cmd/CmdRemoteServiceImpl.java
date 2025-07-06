@@ -8,10 +8,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -45,9 +48,15 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
 
         PumpStreamHandler streamHandler = new PumpStreamHandler(infoStream, errorStream);
         executor.setStreamHandler(streamHandler);
+        executor.setWatchdog(new ExecuteWatchdog.Builder().setTimeout(Duration.ofMinutes(5)).get());  // 5分钟超时
         CommandLine cmdLine = buildCommandLine(remoteServer, command);
-        int exitCode = executor.execute(cmdLine);
-        return exitCode == 0;
+        try {
+            int exitCode = executor.execute(cmdLine);
+            return exitCode == 0;
+        } catch (IOException e) {
+            log.error("远程命令执行失败: {}", command, e);
+            return false;
+        }
     }
 
     /**
@@ -64,9 +73,8 @@ public class CmdRemoteServiceImpl implements ICmdRemoteService {
         cmdLine.addArgument("-i");
         cmdLine.addArgument(remoteServer.getPrivateKeyLocalPath());
         cmdLine.addArgument(remoteServer.getUsername() + "@" + remoteServer.getHost());
-//        String wrapped = String.format("bash -l -c \"%s\"", command.replace("\"","\\\""));
-// 或者
-//        String wrapped = String.format("bash -ic \"%s\"", command.replace("\"","\\\""));
+
+//        String wrapped = String.format("bash -l -c \"%s\"", command.replace("\"", "\\\""));
 //        cmdLine.addArgument(wrapped, false);
         cmdLine.addArgument(command, false); // Pass command to bash without escaping
 //        cmdLine.addArgument("bash -l -c '" + command + "'", false);

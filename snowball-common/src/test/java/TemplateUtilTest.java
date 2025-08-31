@@ -1,17 +1,7 @@
-import cn.hutool.json.JSONUtil;
-import com.pro.snowball.common.util.FreemarkerMethodGetGitName;
-import com.pro.snowball.common.util.FreemarkerMethodJson;
 import com.pro.snowball.common.util.TemplateUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 @Slf4j
 public class TemplateUtilTest {

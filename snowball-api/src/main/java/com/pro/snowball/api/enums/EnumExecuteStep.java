@@ -18,7 +18,6 @@ public enum EnumExecuteStep implements  IEnumToDbEnum<ExecuteStep> {
     _2("编译打包-maven", null, 10020, true, null),
     _3("连接服务器-重启-ssh-jar", null, 10040, true, null),
     _4("连接服务器-启动新进程-ssh-jar", null, 10050, true, null),
-    _5("连接服务器-复制新软件包-ssh-jar", null, 10030, false, null),
     _6("压缩lib-复制lib-连接服务器-解压", null, 10060, true, null),
     _9("拉取ui代码-git-yarnInstall", "", 100, true, null),
     _11("部署ui代码", "", 100, true, null);

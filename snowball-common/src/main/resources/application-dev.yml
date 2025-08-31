@@ -4,6 +4,7 @@ spring:
 #    username: root
 #    password: 'xuETfGvBRoKlFSuNdtBb540IqNmZPfPhDQ8n2W1x2koeMZJtqJXQkiG4JLL6C'
     url: jdbc:mysql://localhost:3306/snowball?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://localhost:3306/snowball-cloud?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: developer
 logging:

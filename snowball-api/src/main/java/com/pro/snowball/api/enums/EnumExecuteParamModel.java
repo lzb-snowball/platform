@@ -1,6 +1,7 @@
 package com.pro.snowball.api.enums;
 
 import com.pro.common.module.api.system.model.enums.IEnumAuthDict;
+import com.pro.framework.api.enums.EnumToDbEnum;
 import com.pro.framework.api.enums.IEnumToDbEnum;
 import com.pro.snowball.api.model.db.ExecuteParamModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,6 +10,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+//@EnumToDbEnum(enumFileSubPath = "com.pro.common.module.api.common.model.db.AuthRoute")
 public enum EnumExecuteParamModel implements  IEnumToDbEnum<ExecuteParamModel> {
 
     _1("modules", "模块", "", 100, true, true, true, true, null),

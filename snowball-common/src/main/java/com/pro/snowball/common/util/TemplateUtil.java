@@ -32,8 +32,6 @@ public class TemplateUtil {
 
     @SneakyThrows
     public static String analysis(String templateContent, Map<String, Object> paramMap) {
-//        templateContent = templateContent.replace("<@remote", "&lt;@remote").replace("</@remote>", "&lt;/@remote&gt;");
-
         // 使用 StringReader 创建模板
         Template template = new Template("dynamicTemplate", new StringReader(templateContent), cfg);
 
